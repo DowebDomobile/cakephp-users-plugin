@@ -69,5 +69,5 @@ Adding menu for logged in users:
 ); ?>
 ```
 
-##Advanced usege
+##Advanced usage
 Coming soon
