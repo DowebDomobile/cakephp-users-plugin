@@ -49,5 +49,5 @@ Adding login/logout links:
 Adding menu for logged in users:
 
 ```
-<?= $this->cell('User.Auth::menu', [$Auth, [__d('users', 'Users') => ['plugin' => 'User', 'controller' => 'Users']]]); ?>
+<?= $this->cell('User.Auth::menu', [$Auth, [__d('users', 'Users') => ['plugin' => 'Users', 'controller' => 'Users']]]); ?>
 ```

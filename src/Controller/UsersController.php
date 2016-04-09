@@ -2,17 +2,17 @@
 /**
  *
  */
-namespace User\Controller;
+namespace Users\Controller;
 
 use App\Controller\AppController;
 use Cake\Mailer\Email;
-use User\Exception\NotInitializedComponentException;
-use User\Model\Entity\User;
+use Users\Exception\NotInitializedComponentException;
+use Users\Model\Entity\User;
 
 /**
  * Users Controller
  *
- * @property \User\Model\Table\UsersTable $Users
+ * @property \Users\Model\Table\UsersTable $Users
  */
 class UsersController extends AppController
 {
@@ -173,7 +173,7 @@ class UsersController extends AppController
                 (new Email())->addTo($user->email)
                         ->emailFormat('html')
                         ->subject(__d('users', 'Restore password for {0}', [$this->viewVars['description']]))
-                        ->template('User.restore')
+                        ->template('Users.restore')
                         ->viewVars($user->toArray() + ['code' => $user->code])
                         ->send();
                 $this->Flash->success(__d('users', 'Restore code sent to email.'));
