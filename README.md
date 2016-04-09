@@ -1,4 +1,12 @@
-# User plugin for CakePHP
+# Users plugin for CakePHP(tm)
+
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
+
+The plugin with users basic features:
+- login
+- logout
+- restore password
+- manage users
 
 ## Installation
 
@@ -9,24 +17,30 @@ The recommended way to install composer packages is:
 ```
 composer require DowebDomobile/cakephp-users-plugin
 ```
+or add to composer.json:
+```
+"require": {
+    "DowebDomobile/cakephp-users-plugin": "dev-master"
+}
+```
 
 ## Usage
 
 Load plugin to application in config/bootstrap.php file:
 
-```
+```php
 Plugin::load('Users', ['bootstrap' => false, 'routes' => true]);
 ```
 
 Using plugin migrations:
 
 ```
-bin/cake bake migration migrate -p User
+bin/cake bake migration migrate -p Users
 ```
 
 Initialize AuthComponent in your AppController:
 
-```
+```php
 $authConfig = [
         'authenticate' => [
                 'Form' => [
@@ -42,12 +56,15 @@ $this->set('Auth', $this->loadComponent('Auth', $authConfig));
 
 Adding login/logout links:
 
-```
-<?= $this->cell('User.Auth', [$Auth]); ?>
+```php
+<?= $this->cell('Users.Auth', [$Auth]); ?>
 ```
 
 Adding menu for logged in users:
 
-```
-<?= $this->cell('User.Auth::menu', [$Auth, [__d('users', 'Users') => ['plugin' => 'Users', 'controller' => 'Users']]]); ?>
+```php
+<?= $this->cell(
+        'Users.Auth::menu',
+         [$Auth, [__d('users', 'Users') => ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'index']]]
+); ?>
 ```
