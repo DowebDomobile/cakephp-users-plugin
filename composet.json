@@ -1,5 +1,5 @@
 {
-    "name": "DowebDomobile/cakephp-users-plugin",
+    "name": "dowebdomobile/cakephp-users-plugin",
     "description": "User plugin for CakePHP3",
     "type": "cakephp-plugin",
     "require": {
