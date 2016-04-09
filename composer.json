@@ -1,6 +1,6 @@
 {
     "name": "DowebDomobile/cakephp-users-plugin",
-    "description": "User plugin for CakePHP3",
+    "description": "Users plugin for CakePHP3",
     "type": "cakephp-plugin",
     "require": {
         "php": ">=5.4.16",
