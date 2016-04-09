@@ -24,7 +24,7 @@ or add to composer.json:
 }
 ```
 
-## Usage
+## Basic usage
 
 Load plugin to application in config/bootstrap.php file:
 
@@ -68,3 +68,6 @@ Adding menu for logged in users:
          [$Auth, [__d('users', 'Users') => ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'index']]]
 ); ?>
 ```
+
+##Advanced usege
+Coming soon
