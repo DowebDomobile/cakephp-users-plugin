@@ -27,7 +27,7 @@ class LogoutCellTest extends TestCase
     /**
      * Test subject
      *
-     * @var \User\View\Cell\AuthCell
+     * @var \Users\View\Cell\AuthCell
      */
     public $Logout;
 
@@ -39,8 +39,8 @@ class LogoutCellTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->request = $this->getMock('Cake\Network\Request');
-        $this->response = $this->getMock('Cake\Network\Response');
+        $this->request = $this->createMock('Cake\Network\Request');
+        $this->response = $this->createMock('Cake\Network\Response');
         $this->Logout = new AuthCell($this->request, $this->response);
     }
 
@@ -61,8 +61,30 @@ class LogoutCellTest extends TestCase
      *
      * @return void
      */
-    public function testDisplay()
+    public function testDisplayLoggedInUser()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $Auth = $this->createMock('Cake\Controller\Component\AuthComponent');
+        $Auth->expects($this->once())->method('user')->will($this->returnValue(true));
+
+        /** @var Cake\Controller\Component\AuthComponent $Auth */
+        $this->Logout->display($Auth, ['class' => 'passed']);
+
+        $this->assertEquals('logout', $this->Logout->template, 'When user is logged in template must be logout');
+        $this->assertEquals($Auth, $this->Logout->viewVars['Auth']);
+        $this->assertEquals('passed', $this->Logout->viewVars['class']);
+        $this->assertCount(2, $this->Logout->viewVars);
+    }
+
+    public function testDisplayLoggedOutUser()
+    {
+        $Auth = $this->createMock('Cake\Controller\Component\AuthComponent');
+        $Auth->expects($this->once())->method('user')->will($this->returnValue(false));
+
+        /** @var Cake\Controller\Component\AuthComponent $Auth */
+        $this->Logout->display($Auth);
+
+        $this->assertEquals('login', $this->Logout->template, 'When user is logged in template must be login');
+        $this->assertEquals($Auth, $this->Logout->viewVars['Auth']);
+        $this->assertCount(1, $this->Logout->viewVars);
     }
 }
