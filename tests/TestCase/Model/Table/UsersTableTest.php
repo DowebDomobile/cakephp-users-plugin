@@ -35,7 +35,7 @@ class UsersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Users') ? [] : ['className' => 'User\Model\Table\UsersTable'];
+        $config = TableRegistry::exists('Users') ? [] : ['className' => 'Users\Model\Table\UsersTable'];
         $this->Users = TableRegistry::get('Users', $config);
     }
 
