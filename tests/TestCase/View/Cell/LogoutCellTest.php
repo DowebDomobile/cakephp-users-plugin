@@ -2,7 +2,7 @@
 namespace Users\Test\TestCase\View\Cell;
 
 use Cake\TestSuite\TestCase;
-use User\View\Cell\AuthCell;
+use Users\View\Cell\AuthCell;
 
 /**
  * User\View\Cell\LogoutCell Test Case
