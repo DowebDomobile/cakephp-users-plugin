@@ -31,7 +31,7 @@ class UsersSeed extends AbstractSeed
     public function run()
     {
         $data = [[
-                'email' => 'admin@example.com',
+                'login' => 'admin',
                 'password' => (new \Cake\Auth\DefaultPasswordHasher())->hash('DefaultAdminPassword'),
         ]];
 

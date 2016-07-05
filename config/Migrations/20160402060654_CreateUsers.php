@@ -28,11 +28,11 @@ class CreateUsers extends AbstractMigration
     public function change()
     {
         $this->table('users')
-                ->addColumn('email', 'string', ['length' => 255, 'null' => false, 'default' => null])
+                ->addColumn('login', 'string', ['length' => 255, 'null' => false, 'default' => null])
                 ->addColumn('password', 'string', ['length' => 60, 'null' => false, 'default' => null])
                 ->addColumn('code', 'string', ['length' => 60, 'null' => true, 'default' => null])
                 ->addColumn('is_active', 'boolean', ['null' => false, 'default' => true])
-                ->addIndex(['email'], ['unique' => true])
+                ->addIndex(['login'], ['unique' => true])
                 ->create();
     }
 }
