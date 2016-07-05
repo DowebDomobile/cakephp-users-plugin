@@ -17,20 +17,19 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Users Model
+ * Contacts Model
  *
- * @property \Cake\ORM\Association\HasMany $Contacts
- * @property \Cake\ORM\Association\HasOne $Contact
+ * @property \Cake\ORM\Association\BelongsTo $Users
  *
- * @method \Users\Model\Entity\User get($primaryKey, $options = [])
- * @method \Users\Model\Entity\User newEntity($data = null, array $options = [])
- * @method \Users\Model\Entity\User[] newEntities(array $data, array $options = [])
- * @method \Users\Model\Entity\User|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Users\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Users\Model\Entity\User[] patchEntities($entities, array $data, array $options = [])
- * @method \Users\Model\Entity\User findOrCreate($search, callable $callback = null)
+ * @method \Users\Model\Entity\Contact get($primaryKey, $options = [])
+ * @method \Users\Model\Entity\Contact newEntity($data = null, array $options = [])
+ * @method \Users\Model\Entity\Contact[] newEntities(array $data, array $options = [])
+ * @method \Users\Model\Entity\Contact|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Users\Model\Entity\Contact patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Users\Model\Entity\Contact[] patchEntities($entities, array $data, array $options = [])
+ * @method \Users\Model\Entity\Contact findOrCreate($search, callable $callback = null)
  */
-class UsersTable extends Table
+class ContactsTable extends Table
 {
 
     /**
@@ -43,25 +42,15 @@ class UsersTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('users');
+        $this->table('contacts');
         $this->displayField('id');
         $this->primaryKey('id');
 
-        $this->hasMany(
-                'Contacts',
-                [
-                        'foreignKey' => 'user_id',
-                        'className' => 'Users.Contacts'
-                ]
-        );
-
-        $this->hasOne(
-                'Contact',
-                [
-                        'foreignKey' => 'user_id',
-                        'className' => 'Users.Contacts'
-                ]
-        );
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER',
+            'className' => 'Users.Users'
+        ]);
     }
 
     /**
@@ -77,21 +66,22 @@ class UsersTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('username', 'create')
-            ->notEmpty('username')
-            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->requirePresence('type', 'create')
+            ->notEmpty('type');
 
         $validator
-            ->requirePresence('password', 'create')
-            ->notEmpty('password');
+            ->allowEmpty('contact');
+
+        $validator
+            ->allowEmpty('replace');
 
         $validator
             ->allowEmpty('code');
 
         $validator
-            ->boolean('is_active')
-            ->requirePresence('is_active', 'create')
-            ->notEmpty('is_active');
+            ->boolean('is_login')
+            ->requirePresence('is_login', 'create')
+            ->notEmpty('is_login');
 
         return $validator;
     }
@@ -105,7 +95,7 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['username']));
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
 }

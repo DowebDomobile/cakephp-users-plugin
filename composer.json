@@ -2,6 +2,12 @@
     "name": "DowebDomobile/cakephp-users-plugin",
     "description": "Users plugin for CakePHP3",
     "type": "cakephp-plugin",
+    "authors": [
+        {
+            "name": "Ivan Vorsin",
+            "email": "ivanboroda@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=5.4.16",
         "cakephp/plugin-installer": "*",

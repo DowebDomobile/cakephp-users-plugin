@@ -12,22 +12,22 @@
  */
 namespace Users\Model\Entity;
 
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
-use Cake\Utility\Text;
 
 /**
- * User Entity
+ * Contact Entity
  *
  * @property int $id
- * @property string $username
- * @property string $password
+ * @property int $user_id
+ * @property string $type
+ * @property string $contact
+ * @property string $replace
  * @property string $code
- * @property bool $is_active
+ * @property bool $is_login
  *
- * @property \Users\Model\Entity\Contact[] $contacts
+ * @property \Users\Model\Entity\User $user
  */
-class User extends Entity
+class Contact extends Entity
 {
 
     /**
@@ -49,27 +49,5 @@ class User extends Entity
      *
      * @var array
      */
-    protected $_hidden = ['password', 'code'];
-
-    /**
-     * Hash not empty password before assign to user.
-     *
-     * @param string $password
-     * @return bool|string
-     */
-    protected function _setPassword($password)
-    {
-        return empty($password) ? '' : (new DefaultPasswordHasher())->hash($password);
-    }
-
-    /**
-     * Generate new code or unset code
-     *
-     * @param boolean $value
-     * @return null|string
-     */
-    public function _setCode($value)
-    {
-        return $value ? Text::uuid() : null;
-    }
+    protected $_hidden = ['code'];
 }

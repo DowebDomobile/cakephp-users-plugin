@@ -8,7 +8,6 @@
  *
  * @copyright     Copyright (c) DowebDomobile (http://dowebdomobile.ru)
  * @link          https://github.com/DowebDomobile/cakephp-users-plugin CakePHP(tm) Users plugin project
- * @since         0.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 namespace Users\Controller;
@@ -26,7 +25,7 @@ use Users\Model\Entity\User;
 class UsersController extends AppController
 {
     /**
-     * @throws \User\Exception\NotInitializedComponentException
+     * @throws \Users\Exception\NotInitializedComponentException
      */
     public function initialize()
     {
