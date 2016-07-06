@@ -32,7 +32,7 @@ class CreateUsers extends AbstractMigration
                 ->addColumn('password', 'string', ['length' => 60, 'null' => false, 'default' => null])
                 ->addColumn('code', 'string', ['length' => 60, 'null' => true, 'default' => null])
                 ->addColumn('is_active', 'boolean', ['null' => false, 'default' => true])
-                ->addIndex(['login'], ['unique' => true])
+                ->addIndex(['username'], ['unique' => true])
                 ->create();
     }
 }
