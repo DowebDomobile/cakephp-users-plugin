@@ -47,6 +47,8 @@ class ContactsAuthenticate extends FormAuthenticate
             'fields' => [
                     'username' => 'contact',
                     'password' => 'password',
+            ],
+            'contactsFields' => [
                     'type' => 'type',
             ],
             'userModel' => 'Users.Users',
@@ -87,7 +89,7 @@ class ContactsAuthenticate extends FormAuthenticate
         }
 
         $conditions = [
-                $tableContacts->aliasField($config['fields']['type']) . ' IN' => $config['contactTypes'],
+                $tableContacts->aliasField($config['contactsFields']['type']) . ' IN' => $config['contactTypes'],
                 $tableContacts->aliasField($config['fields']['username']) => $username,
                 'is_login' => true,
         ];
