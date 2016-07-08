@@ -4,7 +4,6 @@ namespace Users\Test\TestCase\Model\Table;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Cake\Validation\Validator;
 
 /**
  * Users\Model\Table\UsersTable Test Case

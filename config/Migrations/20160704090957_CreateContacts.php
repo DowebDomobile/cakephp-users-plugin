@@ -19,7 +19,7 @@ class CreateContacts extends AbstractMigration
                 ->addColumn('replace', 'string', ['length' => 255, 'default' => null, 'null' => true])
                 ->addColumn('code', 'string', ['length' => 60, 'default' => null, 'null' => true])
                 ->addColumn('is_login', 'boolean', ['default' => false, 'null' => false])
-                ->addIndex(['user_id', 'type', 'contact'], ['unique' => true])
+                ->addIndex(['type', 'contact'], ['unique' => true])
                 ->addForeignKey('user_id', 'users', 'id', ['delete' => 'cascade'])
                 ->create();
     }

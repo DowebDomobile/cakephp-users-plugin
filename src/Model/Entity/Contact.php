@@ -13,6 +13,7 @@
 namespace Users\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Utility\Text;
 
 /**
  * Contact Entity
@@ -50,4 +51,26 @@ class Contact extends Entity
      * @var array
      */
     protected $_hidden = ['code'];
+
+    /**
+     * Set contact to replace at first
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function _setContact($value)
+    {
+        $result = $this->contact;
+        if (($value == $this->replace) && !empty($this->code)) {
+            $this->replace = null;
+            $this->code = null;
+            $result = $value;
+        } else {
+            $this->replace = $value;
+            if (empty($this->code)) {
+                $this->code = Text::uuid();
+            }
+        }
+        return $result;
+    }
 }
