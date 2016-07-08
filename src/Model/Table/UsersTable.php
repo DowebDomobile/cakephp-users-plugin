@@ -20,7 +20,6 @@ use Cake\Validation\Validator;
  * Users Model
  *
  * @property \Cake\ORM\Association\HasMany $Contacts
- * @property \Cake\ORM\Association\HasOne $Contact
  *
  * @method \Users\Model\Entity\User get($primaryKey, $options = [])
  * @method \Users\Model\Entity\User newEntity($data = null, array $options = [])
@@ -47,21 +46,10 @@ class UsersTable extends Table
         $this->displayField('id');
         $this->primaryKey('id');
 
-        $this->hasMany(
-                'Contacts',
-                [
-                        'foreignKey' => 'user_id',
-                        'className' => 'Users.Contacts'
-                ]
-        );
-
-        $this->hasOne(
-                'Contact',
-                [
-                        'foreignKey' => 'user_id',
-                        'className' => 'Users.Contacts'
-                ]
-        );
+        $this->hasMany('Contacts', [
+            'foreignKey' => 'user_id',
+            'className' => 'Users.Contacts'
+        ]);
     }
 
     /**
@@ -77,13 +65,11 @@ class UsersTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('username', 'create')
-            ->notEmpty('username')
+            ->allowEmpty('username')
             ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->requirePresence('password', 'create')
-            ->notEmpty('password');
+            ->allowEmpty('password');
 
         $validator
             ->allowEmpty('code');
