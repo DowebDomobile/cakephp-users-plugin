@@ -106,4 +106,19 @@ class ContactsAuthenticate extends FormAuthenticate
 
         return $query;
     }
+
+    /**
+     * {@inheritDocs}
+     */
+    public function unauthenticated(Request $request, Response $response)
+    {
+        $result = null;
+        if (!$this->config('unauthorizedRedirect')) {
+            $response->statusCode(403);
+            $response->body(json_encode(['success' => false, 'message' => $this->config('authError')]));
+            $result = $response;
+        }
+
+        return $result;
+    }
 }
