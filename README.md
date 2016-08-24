@@ -35,7 +35,7 @@ Plugin::load('Users', ['bootstrap' => false, 'routes' => true]);
 Using plugin migrations:
 
 ```
-bin/cake bake migration migrate -p Users
+bin/cake migrations migrate -p Users
 ```
 
 Initialize AuthComponent in your AppController:
