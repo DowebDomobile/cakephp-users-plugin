@@ -73,7 +73,8 @@ class ContactsTable extends Table
             ->allowEmpty('contact');
 
         $validator
-            ->allowEmpty('replace');
+                ->allowEmpty('replace')
+                ->add('contact', 'unique', ['rule' => ['validateUnique'], 'provider' => 'table']);
 
         $validator
             ->allowEmpty('code');
@@ -96,6 +97,7 @@ class ContactsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->isUnique(['type', 'contact']));
         return $rules;
     }
 }
