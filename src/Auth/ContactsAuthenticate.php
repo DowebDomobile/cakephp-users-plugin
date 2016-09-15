@@ -14,6 +14,7 @@
 namespace Users\Auth;
 
 use Cake\Auth\FormAuthenticate;
+use Cake\Controller\Component\AuthComponent;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\ORM\Query;
@@ -113,9 +114,11 @@ class ContactsAuthenticate extends FormAuthenticate
     public function unauthenticated(Request $request, Response $response)
     {
         $result = null;
-        if (!$this->config('unauthorizedRedirect')) {
+        /** @var AuthComponent $Auth */
+        $Auth = $this->_registry->get('Auth');
+        if (!$Auth->config('unauthorizedRedirect')) {
             $response->statusCode(403);
-            $response->body(json_encode(['success' => false, 'message' => $this->config('authError')]));
+            $response->body(json_encode(['success' => false, 'message' => $Auth->config('authError')]));
             $result = $response;
         }
 
