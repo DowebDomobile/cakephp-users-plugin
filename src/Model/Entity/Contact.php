@@ -61,16 +61,14 @@ class Contact extends Entity
     protected function _setContact($value)
     {
         $result = $this->contact;
-        if (($value == $this->replace) && !empty($this->code)) {
-            $this->replace = null;
-            $this->code = null;
-            $result = $value;
-        } else {
+
+        if ($value != $this->replace) {
             $this->replace = $value;
             if (empty($this->code)) {
                 $this->code = Text::uuid();
             }
         }
+
         return $result;
     }
 }
