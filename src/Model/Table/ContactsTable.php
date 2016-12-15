@@ -61,6 +61,7 @@ class ContactsTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
+        $repository = $this;
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
@@ -74,7 +75,15 @@ class ContactsTable extends Table
 
         $validator
                 ->allowEmpty('replace')
-                ->add('contact', 'unique', ['rule' => ['validateUnique'], 'provider' => 'table']);
+                ->add(
+                        'replace',
+                        'unique',
+                        [
+                                'rule' => function ($value, $context) use($repository) {
+                                            return !$repository->exists(['contact' => $value]);
+                                        }
+                        ]
+                );
 
         $validator
             ->allowEmpty('code');
