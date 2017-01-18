@@ -21,7 +21,7 @@ class ContactsSeed extends AbstractSeed
         $data = [[
             'user_id' => 1,
             'type' => 'email',
-            'contact' => 'admin@exaple.com',
+            'contact' => 'admin@example.com',
             'is_login' => true,
         ]];
 

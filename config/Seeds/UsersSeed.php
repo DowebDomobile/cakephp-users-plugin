@@ -11,7 +11,7 @@
  * @since         0.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-use Phinx\Seed\AbstractSeed;
+use Migrations\AbstractSeed;
 
 /**
  * Users seed.
