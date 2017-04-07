@@ -1,5 +1,5 @@
 <?php
-namespace Users\Test\TestCase\Model\Table;
+namespace Dwdm\Users\Test\TestCase\Model\Table;
 
 use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
@@ -14,7 +14,7 @@ class UsersTableTest extends TestCase
     /**
      * Test subject
      *
-     * @var \Users\Model\Table\UsersTable
+     * @var Dwdm\\Users\Model\Table\UsersTable
      */
     public $Users;
 
@@ -24,8 +24,8 @@ class UsersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.users.users',
-        'plugin.users.contacts'
+        'plugin.dwdm/users.users',
+        'plugin.dwdm/users.contacts'
     ];
 
     /**
@@ -36,7 +36,7 @@ class UsersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Users') ? [] : ['className' => 'Users\Model\Table\UsersTable'];
+        $config = TableRegistry::exists('Users') ? [] : ['className' => 'Dwdm\Users\Model\Table\UsersTable'];
         $this->Users = TableRegistry::get('Users', $config);
     }
 

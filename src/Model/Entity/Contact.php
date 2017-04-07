@@ -10,7 +10,7 @@
  * @link          https://github.com/DowebDomobile/cakephp-users-plugin CakePHP(tm) Users plugin project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace Users\Model\Entity;
+namespace Dwdm\Users\Model\Entity;
 
 use Cake\ORM\Entity;
 use Cake\Utility\Text;
@@ -26,7 +26,7 @@ use Cake\Utility\Text;
  * @property string $code
  * @property bool $is_login
  *
- * @property \Users\Model\Entity\User $user
+ * @property \Dwdm\Users\Model\Entity\User $user
  */
 class Contact extends Entity
 {

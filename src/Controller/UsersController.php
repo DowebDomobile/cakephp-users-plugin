@@ -10,9 +10,8 @@
  * @link          https://github.com/DowebDomobile/cakephp-users-plugin CakePHP(tm) Users plugin project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace Users\Controller;
+namespace Dwdm\Users\Controller;
 
-use App\Controller\AppController;
 use Cake\Mailer\Email;
 use Users\Exception\NotInitializedComponentException;
 use Users\Model\Entity\User;

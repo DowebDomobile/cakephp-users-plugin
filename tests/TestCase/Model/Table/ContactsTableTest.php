@@ -1,9 +1,9 @@
 <?php
-namespace Users\Test\TestCase\Model\Table;
+namespace Dwdm\Users\Test\TestCase\Model\Table;
 
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Users\Model\Table\ContactsTable;
+use Dwdm\Users\Model\Table\ContactsTable;
 
 /**
  * Users\Model\Table\ContactsTable Test Case
@@ -14,7 +14,7 @@ class ContactsTableTest extends TestCase
     /**
      * Test subject
      *
-     * @var \Users\Model\Table\ContactsTable
+     * @var \Dwdm\Users\Model\Table\ContactsTable
      */
     public $Contacts;
 
@@ -24,8 +24,8 @@ class ContactsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.users.contacts',
-        'plugin.users.users'
+        'plugin.dwdm/users.users',
+        'plugin.dwdm/users.contacts',
     ];
 
     /**
@@ -36,7 +36,7 @@ class ContactsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Contacts') ? [] : ['className' => 'Users\Model\Table\ContactsTable'];
+        $config = TableRegistry::exists('Contacts') ? [] : ['className' => 'Dwdm\Users\Model\Table\ContactsTable'];
         $this->Contacts = TableRegistry::get('Contacts', $config);
     }
 

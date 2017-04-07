@@ -10,7 +10,7 @@
  * @link          https://github.com/DowebDomobile/cakephp-users-plugin CakePHP(tm) Users plugin project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace Users\Model\Entity;
+namespace Dwdm\Users\Model\Entity;
 
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
@@ -25,7 +25,7 @@ use Cake\Utility\Text;
  * @property string $code
  * @property bool $is_active
  *
- * @property \Users\Model\Entity\Contact[] $contacts
+ * @property \Dwdm\Users\Model\Entity\Contact[] $contacts
  */
 class User extends Entity
 {

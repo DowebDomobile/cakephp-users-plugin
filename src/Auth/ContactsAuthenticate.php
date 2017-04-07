@@ -11,12 +11,13 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Users\Auth;
+namespace Dwdm\Users\Auth;
 
 use Cake\Auth\FormAuthenticate;
 use Cake\Controller\Component\AuthComponent;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\CallbackStream;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
@@ -45,20 +46,20 @@ class ContactsAuthenticate extends FormAuthenticate
      * @var array
      */
     protected $_defaultConfig = [
-            'fields' => [
-                    'username' => 'contact',
-                    'password' => 'password',
-            ],
-            'contactsFields' => [
-                    'type' => 'type',
-            ],
-            'userModel' => 'Users.Users',
-            'contactModel' => 'Contacts',
-            'contactTypes' => ['email'],
-            'scope' => [],
-            'finder' => 'all',
-            'contain' => null,
-            'passwordHasher' => 'Default'
+        'fields' => [
+            'username' => 'contact',
+            'password' => 'password',
+        ],
+        'contactsFields' => [
+            'type' => 'type',
+        ],
+        'userModel' => 'Dwdm/Users.Users',
+        'contactModel' => 'Dwdm/Users.Contacts',
+        'contactTypes' => ['email'],
+        'scope' => [],
+        'finder' => 'all',
+        'contain' => null,
+        'passwordHasher' => 'Default'
     ];
 
     /**
@@ -90,20 +91,20 @@ class ContactsAuthenticate extends FormAuthenticate
         }
 
         $conditions = [
-                $tableContacts->aliasField($config['contactsFields']['type']) . ' IN' => $config['contactTypes'],
-                $tableContacts->aliasField($config['fields']['username']) => $username,
-                'is_login' => true,
+            $tableContacts->aliasField($config['contactsFields']['type']) . ' IN' => $config['contactTypes'],
+            $tableContacts->aliasField($config['fields']['username']) => $username,
+            'is_login' => true,
         ];
 
 
         $query = $table->find($finder, $options)
-                ->contain([$config['contactModel']])
-                ->matching(
-                        $config['contactModel'],
-                        function (Query $q) use ($conditions) {
-                            return $q->where($conditions);
-                        }
-                );
+            ->contain([$tableContacts->getAlias()])
+            ->matching(
+                $tableContacts->getAlias(),
+                function (Query $q) use ($conditions) {
+                    return $q->where($conditions);
+                }
+            );
 
         return $query;
     }
@@ -111,14 +112,20 @@ class ContactsAuthenticate extends FormAuthenticate
     /**
      * {@inheritDocs}
      */
-    public function unauthenticated(Request $request, Response $response)
+    public function unauthenticated(ServerRequest $request, Response $response)
     {
         $result = null;
         /** @var AuthComponent $Auth */
         $Auth = $this->_registry->get('Auth');
-        if (!$Auth->config('unauthorizedRedirect')) {
-            $response->statusCode(403);
-            $response->body(json_encode(['success' => false, 'message' => $Auth->config('authError')]));
+        if (!$Auth->getConfig('unauthorizedRedirect')) {
+            $response->withStatus(403);
+            $response->withBody(
+                new CallbackStream(
+                    function () use ($Auth) {
+                        return json_encode(['success' => false, 'message' => $Auth->getConfig('authError')]);
+                    }
+                )
+            );
             $result = $response;
         }
 

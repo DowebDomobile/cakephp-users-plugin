@@ -18,12 +18,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Users\\": "src"
+            "Dwdm\\Users\\": "src"
+
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Users\\Test\\": "tests",
+            "Dwdm\\Users\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     }

@@ -11,13 +11,13 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Users\Test\TestCase\Auth;
+namespace Dwdm\Users\Test\TestCase\Auth;
 
 use Cake\Controller\ComponentRegistry;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\TestSuite\IntegrationTestCase;
-use Users\Auth\ContactsAuthenticate;
+use Dwdm\Users\Auth\ContactsAuthenticate;
 
 /**
  * Class ContactsAuthenticateTest
@@ -31,8 +31,8 @@ class ContactsAuthenticateTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-            'plugin.users.users',
-            'plugin.users.contacts'
+            'plugin.dwdm/users.users',
+            'plugin.dwdm/users.contacts'
     ];
 
     /**
@@ -54,20 +54,16 @@ class ContactsAuthenticateTest extends IntegrationTestCase
 
     public function testAuthenticate()
     {
-        $request = $this->createMock('\Cake\Network\Request');
+        $request = $this->createMock(ServerRequest::class);
 
-        $request->expects($this->exactly(2))
-                ->method('data')
-                ->withConsecutive($this->equalTo('contact'), $this->equalTo('password'))
-                ->will($this->returnValueMap([['contact', 'email@example.com'], ['password', 'password']]));
+        $request->expects($this->any())
+                ->method('getData')
+                ->will($this->returnValueMap([['contact', null, 'email@example.com'], ['password', null, 'password']]));
 
-        $request->data['contact'] = 'email@example.com';
-        $request->data['password'] = 'password';
+        $response = $this->createMock(Response::class);
 
-        $response = $this->createMock('\Cake\Network\Response');
-
+        /** @var ServerRequest $request */
         /** @var Response $response */
-        /** @var Request $request */
         $user = $this->Auth->authenticate($request, $response);
 
         $this->assertInternalType('array', $user, 'User should be authenticated');

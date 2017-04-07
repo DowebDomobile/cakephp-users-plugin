@@ -10,7 +10,7 @@
  * @link          https://github.com/DowebDomobile/cakephp-users-plugin CakePHP(tm) Users plugin project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace Users\Model\Table;
+namespace Dwdm\Users\Model\Table;
 
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -21,13 +21,13 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
  *
- * @method \Users\Model\Entity\Contact get($primaryKey, $options = [])
- * @method \Users\Model\Entity\Contact newEntity($data = null, array $options = [])
- * @method \Users\Model\Entity\Contact[] newEntities(array $data, array $options = [])
- * @method \Users\Model\Entity\Contact|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Users\Model\Entity\Contact patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Users\Model\Entity\Contact[] patchEntities($entities, array $data, array $options = [])
- * @method \Users\Model\Entity\Contact findOrCreate($search, callable $callback = null)
+ * @method \Dwdm\Users\Model\Entity\Contact get($primaryKey, $options = [])
+ * @method \Dwdm\Users\Model\Entity\Contact newEntity($data = null, array $options = [])
+ * @method \Dwdm\Users\Model\Entity\Contact[] newEntities(array $data, array $options = [])
+ * @method \Dwdm\Users\Model\Entity\Contact|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Dwdm\Users\Model\Entity\Contact patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Dwdm\Users\Model\Entity\Contact[] patchEntities($entities, array $data, array $options = [])
+ * @method \Dwdm\Users\Model\Entity\Contact findOrCreate($search, callable $callback = null)
  */
 class ContactsTable extends Table
 {
@@ -42,14 +42,14 @@ class ContactsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('contacts');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('contacts');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
-            'className' => 'Users.Users'
+            'className' => 'Dwdm/Users.Users'
         ]);
     }
 

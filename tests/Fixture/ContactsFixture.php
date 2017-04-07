@@ -10,7 +10,7 @@
  * @link          https://github.com/DowebDomobile/cakephp-users-plugin CakePHP(tm) Users plugin project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace Users\Test\Fixture;
+namespace Dwdm\Users\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 

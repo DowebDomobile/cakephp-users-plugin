@@ -1,8 +1,7 @@
 <?php
-namespace Users\Test\TestCase\Controller;
+namespace Dwdm\Users\Test\TestCase\Controller;
 
 use Cake\TestSuite\IntegrationTestCase;
-use User\Controller\UsersController;
 
 /**
  * User\Controller\UsersController Test Case
@@ -16,7 +15,7 @@ class UsersControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.users.users'
+        'plugin.dwdm/users.users'
     ];
 
     /**

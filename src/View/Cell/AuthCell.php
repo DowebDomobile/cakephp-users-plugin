@@ -10,7 +10,7 @@
  * @link          https://github.com/DowebDomobile/cakephp-users-plugin CakePHP(tm) Users plugin project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace Users\View\Cell;
+namespace Dwdm\Users\View\Cell;
 
 use Cake\Controller\Component\AuthComponent;
 use Cake\View\Cell;
