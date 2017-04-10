@@ -30,7 +30,7 @@ class UsersFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 10, 'autoIncrement' => true, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'unsigned' => null],
-        'username' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'fixed' => null],
+        'username' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => true, 'comment' => null, 'precision' => null, 'fixed' => null],
         'password' => ['type' => 'string', 'length' => 60, 'default' => null, 'null' => false, 'comment' => null, 'precision' => null, 'fixed' => null],
         'code' => ['type' => 'string', 'length' => 60, 'default' => null, 'null' => true, 'comment' => null, 'precision' => null, 'fixed' => null],
         'is_active' => ['type' => 'boolean', 'length' => null, 'default' => 1, 'null' => false, 'comment' => null, 'precision' => null],
@@ -45,7 +45,7 @@ class UsersFixture extends TestFixture
     {
         $this->records = [
                 [
-                        'id' => 1,
+                        'id' => 1000,
                         'username' => 'username',
                         'password' => (new DefaultPasswordHasher())->hash('password'),
                         'code' => null,

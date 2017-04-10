@@ -5,6 +5,7 @@
 /tmp/*
 /logs/*
 /bin
+composer.phar
 
 # CakePHP 2
 

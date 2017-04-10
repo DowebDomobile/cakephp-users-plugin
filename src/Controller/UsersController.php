@@ -12,14 +12,16 @@
  */
 namespace Dwdm\Users\Controller;
 
+use Cake\Http\Response;
 use Cake\Mailer\Email;
+use Dwdm\Users\Model\Table\UsersTable;
 use Users\Exception\NotInitializedComponentException;
-use Users\Model\Entity\User;
+use Dwdm\Users\Model\Entity\User;
 
 /**
  * Users Controller
  *
- * @property \Users\Model\Table\UsersTable $Users
+ * @property UsersTable $Users
  */
 class UsersController extends AppController
 {
@@ -40,7 +42,7 @@ class UsersController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Network\Response|null
+     * @return Response|null
      */
     public function index()
     {
@@ -54,7 +56,7 @@ class UsersController extends AppController
      * View method
      *
      * @param string|null $id User id.
-     * @return \Cake\Network\Response|null
+     * @return Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
@@ -68,7 +70,7 @@ class UsersController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     * @return Response|void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -90,7 +92,7 @@ class UsersController extends AppController
      * Edit method
      *
      * @param string|null $id User id.
-     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
+     * @return Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
@@ -131,7 +133,7 @@ class UsersController extends AppController
     /**
      * Logging in user.
      *
-     * @return \Cake\Network\Response|null
+     * @return Response|null
      */
     public function login()
     {
@@ -149,7 +151,7 @@ class UsersController extends AppController
     /**
      * Logging out user.
      *
-     * @return \Cake\Network\Response|null
+     * @return Response|null
      */
     public function logout()
     {
@@ -161,7 +163,7 @@ class UsersController extends AppController
      *
      * @param string|null $email
      * @param string|null $code
-     * @return \Cake\Network\Response|null
+     * @return Response|null
      */
     public function restore($email = null, $code = null)
     {

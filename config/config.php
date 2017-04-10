@@ -4,7 +4,7 @@
  */
 
 return [
-    'debug' => false,
+    'debug' => true,
 
     'App' => [
         'encoding' => 'UTF-8',

@@ -22,7 +22,13 @@ Router::plugin(
                 'api',
                 function (RouteBuilder $routes) {
                     $routes->extensions(['json']);
-                    $routes->resources('Users', ['inflect' => 'dasherize']);
+                    $routes->resources(
+                        'Users',
+                        [
+                            'inflect' => 'dasherize',
+                            'map' => ['registration' => ['method' => 'POST', 'action' => 'registration']]
+                        ]
+                    );
                     $routes->fallbacks('DashedRoute');
                 }
             );
