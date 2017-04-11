@@ -26,7 +26,10 @@ Router::plugin(
                         'Users',
                         [
                             'inflect' => 'dasherize',
-                            'map' => ['registration' => ['method' => 'POST', 'action' => 'registration']]
+                            'map' => [
+                                'registration' => ['method' => 'POST', 'action' => 'registration'],
+                                'confirm' => ['method' => 'POST', 'action' => 'confirm'],
+                            ]
                         ]
                     );
                     $routes->fallbacks('DashedRoute');

@@ -9,6 +9,7 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 use Dwdm\Users\Model\Entity\Contact;
 use Dwdm\Users\Model\Entity\User;
+use Dwdm\Users\Model\Table\ContactsTable;
 use Dwdm\Users\Model\Table\UsersTable;
 
 /**
@@ -53,5 +54,35 @@ class UsersControllerTest extends IntegrationTestCase
         $this->get('/users/api/users/registration.json');
 
         $this->assertResponseCode(405);
+    }
+
+    public function testConfirm()
+    {
+        $this->configRequest(['headers' => ['Content-type' => 'application/json']]);
+
+        $this->post(
+            '/users/api/users/confirm.json',
+            json_encode(['contact' => $phone = '+70000000001', 'code' => 123456])
+        );
+
+        $this->assertResponseOk();
+
+        $this->assertResponseEquals(
+            json_encode(
+                ['success' => true, 'message' => 'Contact confirmed.', 'errors' => []],
+                JSON_PRETTY_PRINT
+            )
+        );
+
+        /** @var ContactsTable $Contacts */
+        $Contacts = TableRegistry::get('Contacts');
+
+        $contact = $Contacts->get(1001);
+
+        $this->assertInstanceOf(Contact::class, $contact);
+        $this->assertNull($contact->replace);
+        $this->assertNull($contact->code);
+        $this->assertEquals($phone, $contact->contact);
+        $this->assertEquals('phone', $contact->type);
     }
 }

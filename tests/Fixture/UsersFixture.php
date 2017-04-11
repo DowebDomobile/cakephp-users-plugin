@@ -46,7 +46,14 @@ class UsersFixture extends TestFixture
         $this->records = [
                 [
                         'id' => 1000,
-                        'username' => 'username',
+                        'username' => 'username0',
+                        'password' => (new DefaultPasswordHasher())->hash('password'),
+                        'code' => null,
+                        'is_active' => 1
+                ],
+                [
+                        'id' => 1001,
+                        'username' => 'username1',
                         'password' => (new DefaultPasswordHasher())->hash('password'),
                         'code' => null,
                         'is_active' => 1

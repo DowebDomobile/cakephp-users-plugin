@@ -58,5 +58,14 @@ class ContactsFixture extends TestFixture
             'code' => null,
             'is_login' => true
         ],
+        [
+            'id' => 1001,
+            'user_id' => 1001,
+            'type' => 'phone',
+            'contact' => null,
+            'replace' => '+70000000001',
+            'code' => 123456,
+            'is_login' => true
+        ],
     ];
 }
