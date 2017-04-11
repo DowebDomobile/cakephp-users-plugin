@@ -56,7 +56,7 @@ class UsersFixture extends TestFixture
                         'username' => 'username1',
                         'password' => (new DefaultPasswordHasher())->hash('password'),
                         'code' => null,
-                        'is_active' => 1
+                        'is_active' => false
                 ],
         ];;
 

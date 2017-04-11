@@ -27,8 +27,9 @@ Router::plugin(
                         [
                             'inflect' => 'dasherize',
                             'map' => [
-                                'registration' => ['method' => 'POST', 'action' => 'registration'],
+                                'register' => ['method' => 'POST', 'action' => 'register'],
                                 'confirm' => ['method' => 'POST', 'action' => 'confirm'],
+                                'login' => ['method' => 'POST', 'action' => 'login'],
                             ]
                         ]
                     );

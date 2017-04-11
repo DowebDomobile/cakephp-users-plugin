@@ -50,5 +50,5 @@ class Contact extends Entity
      *
      * @var array
      */
-    protected $_hidden = ['code'];
+    protected $_hidden = ['user_id', 'code'];
 }

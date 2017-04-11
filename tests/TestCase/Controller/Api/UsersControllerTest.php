@@ -5,6 +5,7 @@
 
 namespace Dwdm\Users\Test\TestCase\Controller\Api;
 
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 use Dwdm\Users\Model\Entity\Contact;
@@ -20,13 +21,11 @@ class UsersControllerTest extends IntegrationTestCase
 {
     public $fixtures = ['plugin.dwdm/users.users', 'plugin.dwdm/users.contacts'];
 
-    public function testSuccessRegistration()
+    public function testSuccessRegister()
     {
-        $this->configRequest(['headers' => ['Content-type' => 'application/json']]);
-
         $this->post(
-            '/users/api/users/registration.json',
-            json_encode(['contact' => $phone = '+79131231212'])
+            '/users/api/users/register.json',
+            ['contact' => $phone = '+79131231212']
         );
 
         $this->assertResponseOk();
@@ -49,20 +48,18 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertEquals($phone, $user->contacts[0]->replace);
     }
 
-    public function testRegistrationGet()
+    public function testRegisterGet()
     {
-        $this->get('/users/api/users/registration.json');
+        $this->get('/users/api/users/register.json');
 
         $this->assertResponseCode(405);
     }
 
     public function testConfirm()
     {
-        $this->configRequest(['headers' => ['Content-type' => 'application/json']]);
-
         $this->post(
             '/users/api/users/confirm.json',
-            json_encode(['contact' => $phone = '+70000000001', 'code' => 123456])
+            ['contact' => $phone = '+70000000001', 'code' => 123456]
         );
 
         $this->assertResponseOk();
@@ -77,12 +74,45 @@ class UsersControllerTest extends IntegrationTestCase
         /** @var ContactsTable $Contacts */
         $Contacts = TableRegistry::get('Contacts');
 
-        $contact = $Contacts->get(1001);
+        $contact = $Contacts->get(1001, ['contain' => ['Users']]);
 
         $this->assertInstanceOf(Contact::class, $contact);
         $this->assertNull($contact->replace);
         $this->assertNull($contact->code);
         $this->assertEquals($phone, $contact->contact);
         $this->assertEquals('phone', $contact->type);
+
+        $this->assertInstanceOf(User::class, $contact->user);
+        $this->assertTrue($contact->user->is_active);
+    }
+
+    public function testLogin()
+    {
+        $this->post('/users/api/users/login.json', ['contact' => 'email@example.com', 'password' => 'password']);
+
+        $this->assertResponseOk();
+
+        $this->assertResponseEquals(
+            json_encode(
+                [
+                    'success' => true,
+                    'message' => 'User logged in.',
+                    'errors' => [],
+                    'user' => [
+                        'id' => 1000,
+                        'username' => 'username0',
+                        'is_active' => true,
+                        'contacts' => [[
+                            'id' => 1000,
+                            'type' => 'email',
+                            'contact' => 'email@example.com',
+                            'replace' => null,
+                            'is_login' => true
+                        ]]
+                    ]
+                ],
+                JSON_PRETTY_PRINT
+            )
+        );
     }
 }

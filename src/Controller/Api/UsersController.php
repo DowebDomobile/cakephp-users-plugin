@@ -1,8 +1,13 @@
 <?php
+/**
+ *
+ */
 namespace Dwdm\Users\Controller\Api;
 
+use Cake\Database\Connection;
 use Cake\Database\Expression\IdentifierExpression;
 use Dwdm\Users\Controller\AppController;
+use Dwdm\Users\Model\Entity\Contact;
 use Dwdm\Users\Model\Table\UsersTable;
 
 /**
@@ -12,7 +17,14 @@ use Dwdm\Users\Model\Table\UsersTable;
  */
 class UsersController extends AppController
 {
-    public function registration()
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->Auth->allow(['register', 'confirm', 'login']);
+    }
+
+    public function register()
     {
         $this->request->allowMethod('POST');
 
@@ -50,10 +62,22 @@ class UsersController extends AppController
     {
         $this->request->allowMethod(['POST', 'PUT', 'PATCH']);
 
-        $success = (bool)$this->Users->Contacts->updateAll(
-            ['contact' => new IdentifierExpression('replace'), 'code' => null, 'replace' => null],
-            ['replace' => $this->request->getData('contact'), 'code' => $this->request->getData('code')]
-        );
+        $success = $this->Users->getConnection()->transactional(function (Connection $connection) {
+                $conditions = [
+                    'replace' => $this->request->getData('contact'),
+                    'code' => $this->request->getData('code')
+                ];
+                /** @var Contact $contact */
+                $contact = $this->Users->Contacts->find()->where($conditions)->first();
+
+                $fail = !$this->Users->Contacts->updateAll(
+                    ['contact' => new IdentifierExpression('replace'), 'code' => null, 'replace' => null], $conditions
+                );
+
+                $fail = $fail ? : !$this->Users->updateAll(['is_active' => true], ['id' => $contact->user_id]);
+
+                return !$fail;
+            });
 
         $message = $success ? __('Contact confirmed.', null) : __('Invalid contact.', null);
 
@@ -62,6 +86,12 @@ class UsersController extends AppController
 
     public function login()
     {
+        $this->request->allowMethod('POST');
 
+        $user = $this->Auth->identify();
+        $success = (bool)$user;
+        $message = $success ? __('User logged in.', null) : __('Invalid contact or password.', null);
+
+        $this->set(compact('success', 'message', 'user'));
     }
 }

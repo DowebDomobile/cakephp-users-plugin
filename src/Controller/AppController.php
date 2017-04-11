@@ -20,6 +20,21 @@ class AppController extends Controller
         parent::initialize();
 
         $this->loadComponent('RequestHandler');
+        $this->loadComponent(
+            'Auth',
+            [
+                'authenticate' => [
+                    'Dwdm/Users.Contacts' => [
+                        'contactTypes' => ['phone'],
+                        'scope' => ['is_active' => true]
+                    ]
+                ],
+                'authorize' => 'Controller',
+                'unauthorizedRedirect' => !$this->request->is(['ajax', 'json'], null),
+                'authError' => __('Forbidden', null),
+                'loginAction' => false,
+            ]
+        );
     }
 
 
@@ -31,13 +46,16 @@ class AppController extends Controller
      */
     public function beforeRender(Event $event)
     {
-        $this->set('success', Hash::get($this->viewVars, 'success', empty($this->viewVars['errors'])) );
+        $this->set('success', Hash::get($this->viewVars, 'success', empty($this->viewVars['errors'])));
         $this->set('message', Hash::get($this->viewVars, 'message', ''));
         $this->set('errors', Hash::get($this->viewVars, 'errors', []));
 
         if (in_array($this->response->type(), ['application/json', 'application/xml'])) {
             $serialize = ['success', 'message', 'errors'];
-            $this->set('_serialize', Hash::merge($serialize, Hash::get($this->viewVars, '_serialize', [])));
+            $this->set(
+                '_serialize',
+                Hash::merge($serialize, Hash::get($this->viewVars, '_serialize', array_keys($this->viewVars)))
+            );
         }
     }
 } 

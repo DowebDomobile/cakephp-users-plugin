@@ -49,7 +49,7 @@ class User extends Entity
      *
      * @var array
      */
-    protected $_hidden = ['password', 'code'];
+    protected $_hidden = ['password', 'code', '_matchingData'];
 
     /**
      * Hash not empty password before assign to user.
