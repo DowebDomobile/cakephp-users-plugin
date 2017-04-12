@@ -115,4 +115,24 @@ class UsersControllerTest extends IntegrationTestCase
             )
         );
     }
+
+    public function testRestore()
+    {
+        $this->post('/users/api/users/restore.json', ['contact' => '+70000000002']);
+
+        $this->assertResponseOk();
+        $this->assertResponseEquals(
+            json_encode(
+                ['success' => true, 'message' => 'Confirmation code was sent.', 'errors' => []],
+                JSON_PRETTY_PRINT
+            )
+        );
+
+        /** @var UsersTable $Users */
+        $Users = TableRegistry::get('Users');
+
+        $user = $Users->get(1002);
+
+        $this->assertNotNull($user->code);
+    }
 }

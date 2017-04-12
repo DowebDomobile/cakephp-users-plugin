@@ -6,6 +6,8 @@ namespace Dwdm\Users\Controller\Api;
 
 use Cake\Database\Connection;
 use Cake\Database\Expression\IdentifierExpression;
+use Cake\Event\Event;
+use Cake\ORM\Query;
 use Dwdm\Users\Controller\AppController;
 use Dwdm\Users\Model\Entity\Contact;
 use Dwdm\Users\Model\Table\UsersTable;
@@ -21,7 +23,7 @@ class UsersController extends AppController
     {
         parent::initialize();
 
-        $this->Auth->allow(['register', 'confirm', 'login']);
+        $this->Auth->allow(['register', 'confirm', 'login', 'restore']);
     }
 
     public function register()
@@ -53,7 +55,7 @@ class UsersController extends AppController
         $success = (bool)$this->Users->save($user);
 
         $errors = $user->getErrors();
-        $message = $success ? __('User successfully registered.', null) : __('Please fix registration info.', null);
+        $message = $success ? __('User successfully registered.') : __('Please fix registration info.');
 
         $this->set(compact('success', 'message', 'errors'));
     }
@@ -79,7 +81,7 @@ class UsersController extends AppController
                 return !$fail;
             });
 
-        $message = $success ? __('Contact confirmed.', null) : __('Invalid contact.', null);
+        $message = $success ? __('Contact confirmed.') : __('Invalid contact.');
 
         $this->set(compact('success', 'message'));
     }
@@ -90,8 +92,43 @@ class UsersController extends AppController
 
         $user = $this->Auth->identify();
         $success = (bool)$user;
-        $message = $success ? __('User logged in.', null) : __('Invalid contact or password.', null);
+        $message = $success ? __('User logged in.') : __('Invalid contact or password.');
 
         $this->set(compact('success', 'message', 'user'));
+    }
+
+    public function restore()
+    {
+        $this->request->allowMethod(['POST', 'PUT', 'PATCH']);
+
+        /* @todo get generator from config */
+        $codeGenerator = function() {
+            return rand(100000, 999999);
+        };
+
+        /** @var Contact $contact */
+        $contact = $this->Users->Contacts->find()
+            ->contain(
+                [
+                    'Users' => function (Query $q) {
+                        return $q->where(['Users.is_active' => true]);
+                    }
+                ]
+            )
+            ->where(['type' => 'phone', 'contact' => $this->request->getData('contact')])
+            ->first();
+
+        $success = (bool) $contact;
+
+        if ($success) {
+            $contact->user->code = $codeGenerator();
+            $success = (bool) $this->Users->save($contact->user);
+        }
+
+        $message = $success ? __('Confirmation code was sent.') : __('Invalid contact.');
+
+        $errors = $contact->user->getErrors();
+
+        $this->set(compact('success', 'message', 'errors'));
     }
 }
