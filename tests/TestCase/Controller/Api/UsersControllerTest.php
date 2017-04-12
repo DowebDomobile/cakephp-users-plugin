@@ -158,4 +158,13 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertNull($user->code);
         $this->assertNotEquals($oldHash, $user->password);
     }
+
+    public function testLogout()
+    {
+        $this->session(['Auth' => ['User' => ['id' => 1000]]]);
+
+        $this->post('/users/api/users/logout.json');
+
+        $this->assertResponseOk();
+    }
 }

@@ -6,7 +6,6 @@ namespace Dwdm\Users\Controller\Api;
 
 use Cake\Database\Connection;
 use Cake\Database\Expression\IdentifierExpression;
-use Cake\Event\Event;
 use Cake\ORM\Query;
 use Dwdm\Users\Controller\AppController;
 use Dwdm\Users\Model\Entity\Contact;
@@ -64,8 +63,11 @@ class UsersController extends AppController
     {
         $this->request->allowMethod(['POST', 'PUT', 'PATCH']);
 
-        $success = $this->Users->getConnection()->transactional(function (Connection $connection) {
+        $contactType = 'phone';
+
+        $success = $this->Users->getConnection()->transactional(function (Connection $connection) use ($contactType) {
                 $conditions = [
+                    'type' => $contactType,
                     'replace' => $this->request->getData('contact'),
                     'code' => $this->request->getData('code')
                 ];
@@ -105,6 +107,7 @@ class UsersController extends AppController
         $codeGenerator = function() {
             return rand(100000, 999999);
         };
+        $contactType = 'phone';
 
         /** @var Contact $contact */
         $contact = $this->Users->Contacts->find()
@@ -115,7 +118,7 @@ class UsersController extends AppController
                     }
                 ]
             )
-            ->where(['type' => 'phone', 'contact' => $this->request->getData('contact')])
+            ->where(['type' => $contactType, 'contact' => $this->request->getData('contact')])
             ->first();
 
         $success = (bool) $contact;
@@ -140,6 +143,7 @@ class UsersController extends AppController
         $passwordGenerator = function() {
             return rand(100000, 999999);
         };
+        $contactType = 'phone';
 
         $code = $this->request->getData('code');
 
@@ -152,7 +156,7 @@ class UsersController extends AppController
                     }
                 ]
             )
-            ->where(['type' => 'phone', 'contact' => $this->request->getData('contact')])
+            ->where(['type' => $contactType, 'contact' => $this->request->getData('contact')])
             ->first();
 
         $success = (bool) $contact;
@@ -168,5 +172,12 @@ class UsersController extends AppController
         $errors = $contact->user->getErrors();
 
         $this->set(compact('success', 'message', 'errors'));
+    }
+
+    public function logout()
+    {
+        $this->Auth->logout();
+
+        $this->set('message', __('Logged out.'));
     }
 }
