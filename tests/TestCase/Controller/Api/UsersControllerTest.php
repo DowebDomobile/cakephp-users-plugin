@@ -5,7 +5,9 @@
 
 namespace Dwdm\Users\Test\TestCase\Controller\Api;
 
-use Cake\Core\Configure;
+use Cake\Controller\Controller;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 use Dwdm\Users\Model\Entity\Contact;
@@ -19,7 +21,24 @@ use Dwdm\Users\Model\Table\UsersTable;
  */
 class UsersControllerTest extends IntegrationTestCase
 {
+    /** @var array  */
     public $fixtures = ['plugin.dwdm/users.users', 'plugin.dwdm/users.contacts'];
+
+    /** @var EventManager */
+    public $eventManager;
+
+    public function controllerSpy($event, $controller = null)
+    {
+        /** @var Controller|null $controller */
+        if (!$controller) {
+            $controller = $event->getSubject();
+        }
+
+        $this->eventManager = $controller->eventManager();
+        $this->eventManager->setEventList(new EventList());
+
+        parent::controllerSpy($event, $controller);
+    }
 
     public function testSuccessRegister()
     {
@@ -46,6 +65,9 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertCount(1, $user->contacts);
         $this->assertInstanceOf(Contact::class, $user->contacts[0]);
         $this->assertEquals($phone, $user->contacts[0]->replace);
+
+        $this->assertEventFired('Controller.Users.beforeRegister', $this->eventManager);
+        $this->assertEventFired('Controller.Users.afterRegister', $this->eventManager);
     }
 
     public function testRegisterGet()
@@ -84,6 +106,9 @@ class UsersControllerTest extends IntegrationTestCase
 
         $this->assertInstanceOf(User::class, $contact->user);
         $this->assertTrue($contact->user->is_active);
+
+        $this->assertEventFired('Controller.Users.beforeConfirm', $this->eventManager);
+        $this->assertEventFired('Controller.Users.afterConfirm', $this->eventManager);
     }
 
     public function testLogin()
@@ -114,6 +139,9 @@ class UsersControllerTest extends IntegrationTestCase
                 JSON_PRETTY_PRINT
             )
         );
+
+        $this->assertEventFired('Controller.Users.beforeLogin', $this->eventManager);
+        $this->assertEventFired('Controller.Users.afterLogin', $this->eventManager);
     }
 
     public function testRestore()
@@ -134,6 +162,9 @@ class UsersControllerTest extends IntegrationTestCase
         $user = $Users->get(1002);
 
         $this->assertNotNull($user->code);
+
+        $this->assertEventFired('Controller.Users.beforeRestore', $this->eventManager);
+        $this->assertEventFired('Controller.Users.afterRestore', $this->eventManager);
     }
 
     public function testUpdate()
@@ -157,6 +188,9 @@ class UsersControllerTest extends IntegrationTestCase
 
         $this->assertNull($user->code);
         $this->assertNotEquals($oldHash, $user->password);
+
+        $this->assertEventFired('Controller.Users.beforeUpdate', $this->eventManager);
+        $this->assertEventFired('Controller.Users.afterUpdate', $this->eventManager);
     }
 
     public function testLogout()
@@ -166,5 +200,8 @@ class UsersControllerTest extends IntegrationTestCase
         $this->post('/users/api/users/logout.json');
 
         $this->assertResponseOk();
+
+        $this->assertEventFired('Controller.Users.beforeLogout', $this->eventManager);
+        $this->assertEventFired('Controller.Users.afterLogout', $this->eventManager);
     }
 }

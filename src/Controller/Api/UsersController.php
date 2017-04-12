@@ -36,15 +36,17 @@ class UsersController extends AppController
         $contactType = 'phone';
         $isActive = false;
 
+        $this->dispatchEvent('Controller.Users.beforeRegister', null, $this);
+
         $user = $this->Users->newEntity(
             [
-                'password' => $passwordGenerator(),
+                'password' => $password = $isActive ? $passwordGenerator() : null,
                 'is_active' => $isActive,
                 'contacts' => [
                     [
                         'type' => $contactType,
                         'replace' => $this->request->getData('contact'),
-                        'code' => $codeGenerator(),
+                        'code' => $code = $codeGenerator(),
                         'is_login' => true,
                     ]
                 ],
@@ -52,6 +54,14 @@ class UsersController extends AppController
         );
 
         $success = (bool)$this->Users->save($user);
+
+        if ($success) {
+            $this->dispatchEvent(
+                'Controller.Users.afterRegister',
+                ['user' => $user, 'password' => $password, 'code' => $code],
+                $this
+            );
+        }
 
         $errors = $user->getErrors();
         $message = $success ? __('User successfully registered.') : __('Please fix registration info.');
@@ -64,6 +74,8 @@ class UsersController extends AppController
         $this->request->allowMethod(['POST', 'PUT', 'PATCH']);
 
         $contactType = 'phone';
+
+        $this->dispatchEvent('Controller.Users.beforeConfirm', null, $this);
 
         $success = $this->Users->getConnection()->transactional(function (Connection $connection) use ($contactType) {
                 $conditions = [
@@ -83,6 +95,10 @@ class UsersController extends AppController
                 return !$fail;
             });
 
+        if ($success) {
+            $this->dispatchEvent('Controller.Users.afterConfirm', null, $this);
+        }
+
         $message = $success ? __('Contact confirmed.') : __('Invalid contact.');
 
         $this->set(compact('success', 'message'));
@@ -92,9 +108,15 @@ class UsersController extends AppController
     {
         $this->request->allowMethod('POST');
 
+        $this->dispatchEvent('Controller.Users.beforeLogin', null, $this);
+
         $user = $this->Auth->identify();
         $success = (bool)$user;
         $message = $success ? __('User logged in.') : __('Invalid contact or password.');
+
+        if ($success) {
+            $this->dispatchEvent('Controller.Users.afterLogin', ['user' => $user], $this);
+        }
 
         $this->set(compact('success', 'message', 'user'));
     }
@@ -108,6 +130,8 @@ class UsersController extends AppController
             return rand(100000, 999999);
         };
         $contactType = 'phone';
+
+        $this->dispatchEvent('Controller.Users.beforeRestore', null, $this);
 
         /** @var Contact $contact */
         $contact = $this->Users->Contacts->find()
@@ -128,6 +152,10 @@ class UsersController extends AppController
             $success = (bool) $this->Users->save($contact->user);
         }
 
+        if ($success) {
+            $this->dispatchEvent('Controller.Users.afterRestore', ['contact' => $contact], $this);
+        }
+
         $message = $success ? __('Confirmation code was sent.') : __('Invalid contact.');
 
         $errors = $contact->user->getErrors();
@@ -144,6 +172,8 @@ class UsersController extends AppController
             return rand(100000, 999999);
         };
         $contactType = 'phone';
+
+        $this->dispatchEvent('Controller.Users.beforeUpdate', null, $this);
 
         $code = $this->request->getData('code');
 
@@ -167,6 +197,10 @@ class UsersController extends AppController
             $success = (bool) $this->Users->save($contact->user);
         }
 
+        if ($success) {
+            $this->dispatchEvent('Controller.Users.afterUpdate', ['contact' => $contact], $this);
+        }
+
         $message = $success ? __('New password was sent.') : __('Invalid contact or code.');
 
         $errors = $contact->user->getErrors();
@@ -176,7 +210,11 @@ class UsersController extends AppController
 
     public function logout()
     {
+        $this->dispatchEvent('Controller.Users.beforeLogout', ['user' => $this->Auth->user()], $this);
+
         $this->Auth->logout();
+
+        $this->dispatchEvent('Controller.Users.afterLogout', ['user' => $this->Auth->user()], $this);
 
         $this->set('message', __('Logged out.'));
     }
