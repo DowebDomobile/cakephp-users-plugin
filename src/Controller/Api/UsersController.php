@@ -23,7 +23,7 @@ class UsersController extends AppController
     {
         parent::initialize();
 
-        $this->Auth->allow(['register', 'confirm', 'login', 'restore']);
+        $this->Auth->allow(['register', 'confirm', 'login', 'restore', 'update']);
     }
 
     public function register()
@@ -126,6 +126,44 @@ class UsersController extends AppController
         }
 
         $message = $success ? __('Confirmation code was sent.') : __('Invalid contact.');
+
+        $errors = $contact->user->getErrors();
+
+        $this->set(compact('success', 'message', 'errors'));
+    }
+
+    public function update()
+    {
+        $this->request->allowMethod(['POST', 'PUT', 'PATCH']);
+
+        /* @todo get generator from config */
+        $passwordGenerator = function() {
+            return rand(100000, 999999);
+        };
+
+        $code = $this->request->getData('code');
+
+        /** @var Contact $contact */
+        $contact = $this->Users->Contacts->find()
+            ->contain(
+                [
+                    'Users' => function (Query $q) use ($code) {
+                        return $q->where(['Users.is_active' => true, 'Users.code' => $code]);
+                    }
+                ]
+            )
+            ->where(['type' => 'phone', 'contact' => $this->request->getData('contact')])
+            ->first();
+
+        $success = (bool) $contact;
+
+        if ($success) {
+            $contact->user->password = $passwordGenerator();
+            $contact->user->code = null;
+            $success = (bool) $this->Users->save($contact->user);
+        }
+
+        $message = $success ? __('New password was sent.') : __('Invalid contact or code.');
 
         $errors = $contact->user->getErrors();
 

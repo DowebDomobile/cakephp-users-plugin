@@ -118,15 +118,14 @@ class ContactsAuthenticate extends FormAuthenticate
         /** @var AuthComponent $Auth */
         $Auth = $this->_registry->get('Auth');
         if (!$Auth->getConfig('unauthorizedRedirect')) {
-            $response->withStatus(403);
-            $response->withBody(
-                new CallbackStream(
-                    function () use ($Auth) {
-                        return json_encode(['success' => false, 'message' => $Auth->getConfig('authError')]);
-                    }
-                )
-            );
-            $result = $response;
+            $result = $response->withStatus(403, __('Forbidden'))
+                ->withBody(
+                    new CallbackStream(
+                        function () use ($Auth) {
+                            return json_encode(['success' => false, 'message' => $Auth->getConfig('authError')]);
+                        }
+                    )
+                );
         }
 
         return $result;

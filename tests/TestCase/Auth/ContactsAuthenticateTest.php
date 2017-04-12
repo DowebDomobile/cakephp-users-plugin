@@ -13,6 +13,7 @@
 
 namespace Dwdm\Users\Test\TestCase\Auth;
 
+use Cake\Controller\Component\AuthComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
@@ -35,15 +36,17 @@ class ContactsAuthenticateTest extends IntegrationTestCase
             'plugin.dwdm/users.contacts'
     ];
 
-    /**
-     * @var ContactsAuthenticate
-     */
+    /** @var ContactsAuthenticate */
     public $Auth;
+
+    /** @var ComponentRegistry */
+    public $registry;
 
     public function setUp()
     {
         parent::setUp();
-        $this->Auth = new ContactsAuthenticate(new ComponentRegistry());
+        $this->registry = new ComponentRegistry();
+        $this->Auth = new ContactsAuthenticate($this->registry);
     }
 
     public function tearDown()
@@ -67,6 +70,30 @@ class ContactsAuthenticateTest extends IntegrationTestCase
         $user = $this->Auth->authenticate($request, $response);
 
         $this->assertInternalType('array', $user, 'User should be authenticated');
+    }
+
+    public function testUnauthenticated()
+    {
+        $Auth = $this->createMock(AuthComponent::class);
+        $Auth->expects($this->once())->method('getConfig')->will($this->returnValue(false));
+        $this->registry->set('Auth', $Auth);
+
+        /** @var ServerRequest $request */
+        $request = $this->createMock(ServerRequest::class);
+
+        $response = $this->createMock(Response::class);
+
+        $response->expects($this->exactly(1))
+            ->method('withStatus')
+            ->with($status = 403)
+            ->will($this->returnSelf());
+
+        $response->expects($this->exactly(1))
+            ->method('withBody')
+            ->will($this->returnSelf());
+
+        /** @var Response $response */
+        $this->Auth->unauthenticated($request, $response);
     }
 }
  

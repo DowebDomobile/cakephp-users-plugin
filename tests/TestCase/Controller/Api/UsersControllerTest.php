@@ -135,4 +135,27 @@ class UsersControllerTest extends IntegrationTestCase
 
         $this->assertNotNull($user->code);
     }
+
+    public function testUpdate()
+    {
+        $oldHash = $this->fixtureManager->loaded()['plugin.dwdm/users.users']->records[3]['password'];
+
+        $this->post('/users/api/users/update.json', ['contact' => '+70000000003', 'code' => 123456]);
+
+        $this->assertResponseOk();
+        $this->assertResponseEquals(
+            json_encode(
+                ['success' => true, 'message' => 'New password was sent.', 'errors' => []],
+                JSON_PRETTY_PRINT
+            )
+        );
+
+        /** @var UsersTable $Users */
+        $Users = TableRegistry::get('Users');
+
+        $user = $Users->get(1002);
+
+        $this->assertNull($user->code);
+        $this->assertNotEquals($oldHash, $user->password);
+    }
 }

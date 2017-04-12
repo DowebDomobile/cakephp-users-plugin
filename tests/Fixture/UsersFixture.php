@@ -65,6 +65,13 @@ class UsersFixture extends TestFixture
                         'code' => null,
                         'is_active' => true
                 ],
+                [
+                        'id' => 1003,
+                        'username' => 'username3',
+                        'password' => (new DefaultPasswordHasher())->hash('password'),
+                        'code' => 123456,
+                        'is_active' => true
+                ],
         ];
 
         parent::init();

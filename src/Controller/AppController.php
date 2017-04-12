@@ -31,12 +31,11 @@ class AppController extends Controller
                 ],
                 'authorize' => 'Controller',
                 'unauthorizedRedirect' => !$this->request->is(['ajax', 'json'], null),
-                'authError' => __('Forbidden', null),
+                'authError' => __('Forbidden'),
                 'loginAction' => false,
             ]
         );
     }
-
 
     /**
      * Before render callback.
