@@ -8,6 +8,7 @@ use Cake\Database\Connection;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\ORM\Query;
 use Dwdm\Users\Controller\AppController;
+use Dwdm\Users\Controller\Component\NumberGeneratorComponent;
 use Dwdm\Users\Model\Entity\Contact;
 use Dwdm\Users\Model\Table\UsersTable;
 
@@ -15,38 +16,55 @@ use Dwdm\Users\Model\Table\UsersTable;
  * Users Controller
  *
  * @property UsersTable $Users
+ * @property NumberGeneratorComponent $PasswordGenerator
+ * @property NumberGeneratorComponent $CodeGenerator
  */
 class UsersController extends AppController
 {
+    /**
+     * Initialize controller for generators and action access.
+     */
     public function initialize()
     {
         parent::initialize();
 
+        $this->loadComponent('CodeGenerator', ['className' => 'Dwdm/Users.NumberGenerator', 'length' => 3]);
+        $this->loadComponent('PasswordGenerator', ['className' => 'Dwdm/Users.NumberGenerator', 'length' => 8]);
+
         $this->Auth->allow(['register', 'confirm', 'login', 'restore', 'update']);
     }
 
+    /**
+     * Register new user.
+     */
     public function register()
     {
         $this->request->allowMethod('POST');
 
-        /* @todo configure next variables */
-        $passwordGenerator = $codeGenerator = function() {
-            return rand(100000, 999999);
-        };
+        /**
+         * @var array|string $contactType
+         * @todo move to config. Can be string if need single contact type or array for limit contact types from request
+         */
         $contactType = 'phone';
+
+        /**
+         * @var bool $isActive
+         * @todo move to config. True for create active user without confirmation. False for use confirmation step
+         */
         $isActive = false;
 
         $this->dispatchEvent('Controller.Users.beforeRegister', null, $this);
 
         $user = $this->Users->newEntity(
             [
-                'password' => $password = $isActive ? $passwordGenerator() : null,
+                'password' => $password = $isActive ? $this->PasswordGenerator->run() : null,
                 'is_active' => $isActive,
                 'contacts' => [
                     [
                         'type' => $contactType,
-                        'replace' => $this->request->getData('contact'),
-                        'code' => $code = $codeGenerator(),
+                        'contact' => $isActive ? $this->request->getData('contact') : null,
+                        'replace' => $isActive ? null : $this->request->getData('contact'),
+                        'code' => $code = $isActive ? null : $this->CodeGenerator->run(),
                         'is_login' => true,
                     ]
                 ],
@@ -69,15 +87,25 @@ class UsersController extends AppController
         $this->set(compact('success', 'message', 'errors'));
     }
 
+    /**
+     * Confirm contact.
+     *
+     * @todo Works fine for new registration only. For update contact or change contact needs fix.
+     */
     public function confirm()
     {
         $this->request->allowMethod(['POST', 'PUT', 'PATCH']);
 
+        /**
+         * @var array|string $contactType
+         * @todo move to config. Can be string if need single contact type or array for limit contact types from request
+         */
         $contactType = 'phone';
 
         $this->dispatchEvent('Controller.Users.beforeConfirm', null, $this);
 
-        $success = $this->Users->getConnection()->transactional(function (Connection $connection) use ($contactType) {
+        $success = $this->Users->getConnection()->transactional(
+            function (Connection $connection) use ($contactType) {
                 $conditions = [
                     'type' => $contactType,
                     'replace' => $this->request->getData('contact'),
@@ -87,13 +115,18 @@ class UsersController extends AppController
                 $contact = $this->Users->Contacts->find()->where($conditions)->first();
 
                 $fail = !$this->Users->Contacts->updateAll(
-                    ['contact' => new IdentifierExpression('replace'), 'code' => null, 'replace' => null], $conditions
+                    ['contact' => new IdentifierExpression('replace'), 'code' => null, 'replace' => null],
+                    $conditions
                 );
 
-                $fail = $fail ? : !$this->Users->updateAll(['is_active' => true], ['id' => $contact->user_id]);
+                $fail = $fail ?: !$this->Users->updateAll(
+                    ['password' => $this->PasswordGenerator->run(), 'is_active' => true],
+                    ['id' => $contact->user_id, 'password IS' => null]
+                );
 
                 return !$fail;
-            });
+            }
+        );
 
         if ($success) {
             $this->dispatchEvent('Controller.Users.afterConfirm', null, $this);
@@ -104,6 +137,9 @@ class UsersController extends AppController
         $this->set(compact('success', 'message'));
     }
 
+    /**
+     * Login user.
+     */
     public function login()
     {
         $this->request->allowMethod('POST');
@@ -121,14 +157,17 @@ class UsersController extends AppController
         $this->set(compact('success', 'message', 'user'));
     }
 
+    /**
+     * Request restore password.
+     */
     public function restore()
     {
         $this->request->allowMethod(['POST', 'PUT', 'PATCH']);
 
-        /* @todo get generator from config */
-        $codeGenerator = function() {
-            return rand(100000, 999999);
-        };
+        /**
+         * @var array|string $contactType
+         * @todo move to config. Can be string if need single contact type or array for limit contact types from request
+         */
         $contactType = 'phone';
 
         $this->dispatchEvent('Controller.Users.beforeRestore', null, $this);
@@ -148,7 +187,7 @@ class UsersController extends AppController
         $success = (bool) $contact;
 
         if ($success) {
-            $contact->user->code = $codeGenerator();
+            $contact->user->code = $this->CodeGenerator->run();
             $success = (bool) $this->Users->save($contact->user);
         }
 
@@ -163,14 +202,17 @@ class UsersController extends AppController
         $this->set(compact('success', 'message', 'errors'));
     }
 
+    /**
+     * Update password requested by restore action.
+     */
     public function update()
     {
         $this->request->allowMethod(['POST', 'PUT', 'PATCH']);
 
-        /* @todo get generator from config */
-        $passwordGenerator = function() {
-            return rand(100000, 999999);
-        };
+        /**
+         * @var array|string $contactType
+         * @todo move to config. Can be string if need single contact type or array for limit contact types from request
+         */
         $contactType = 'phone';
 
         $this->dispatchEvent('Controller.Users.beforeUpdate', null, $this);
@@ -192,7 +234,7 @@ class UsersController extends AppController
         $success = (bool) $contact;
 
         if ($success) {
-            $contact->user->password = $passwordGenerator();
+            $contact->user->password = $this->PasswordGenerator->run();
             $contact->user->code = null;
             $success = (bool) $this->Users->save($contact->user);
         }
@@ -208,6 +250,9 @@ class UsersController extends AppController
         $this->set(compact('success', 'message', 'errors'));
     }
 
+    /**
+     * Log out authorized user.
+     */
     public function logout()
     {
         $this->dispatchEvent('Controller.Users.beforeLogout', ['user' => $this->Auth->user()], $this);
