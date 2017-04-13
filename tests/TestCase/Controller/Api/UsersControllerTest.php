@@ -57,7 +57,7 @@ class UsersControllerTest extends IntegrationTestCase
         );
 
         /** @var UsersTable $Users */
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::get('Dwdm/Users.Users');
 
         $user = $Users->find('all', ['contain' => ['Contacts']])->where(['id' => 1])->first();
 
@@ -94,7 +94,7 @@ class UsersControllerTest extends IntegrationTestCase
         );
 
         /** @var ContactsTable $Contacts */
-        $Contacts = TableRegistry::get('Contacts');
+        $Contacts = TableRegistry::get('Dwdm/Users.Contacts');
 
         $contact = $Contacts->get(1001, ['contain' => ['Users']]);
 
@@ -157,7 +157,7 @@ class UsersControllerTest extends IntegrationTestCase
         );
 
         /** @var UsersTable $Users */
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::get('Dwdm/Users.Users');
 
         $user = $Users->get(1002);
 
@@ -182,7 +182,7 @@ class UsersControllerTest extends IntegrationTestCase
         );
 
         /** @var UsersTable $Users */
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::get('Dwdm/Users.Users');
 
         $user = $Users->get(1002);
 
