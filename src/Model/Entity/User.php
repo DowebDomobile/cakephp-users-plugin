@@ -39,10 +39,7 @@ class User extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
-            '*' => true,
-            'id' => false
-    ];
+    protected $_accessible = ['password' => true, 'contacts' => true];
 
     /**
      * Fields that are excluded from JSON versions of the entity.

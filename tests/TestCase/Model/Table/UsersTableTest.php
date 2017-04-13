@@ -4,6 +4,7 @@ namespace Dwdm\Users\Test\TestCase\Model\Table;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Dwdm\Users\Model\Table\UsersTable;
 
 /**
  * Users\Model\Table\UsersTable Test Case
@@ -14,7 +15,7 @@ class UsersTableTest extends TestCase
     /**
      * Test subject
      *
-     * @var Dwdm\\Users\Model\Table\UsersTable
+     * @var UsersTable
      */
     public $Users;
 
@@ -75,7 +76,7 @@ class UsersTableTest extends TestCase
     {
         $user = $this->Users->newEntity($data);
 
-        $errors = $user->errors();
+        $errors = $user->getErrors();
 
         $this->assertEmpty($errors);
     }

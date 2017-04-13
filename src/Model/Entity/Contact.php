@@ -40,10 +40,7 @@ class Contact extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
-            '*' => true,
-            'id' => false
-    ];
+    protected $_accessible = ['replace' => true, 'type' => true];
 
     /**
      * Fields that are excluded from JSON versions of the entity.

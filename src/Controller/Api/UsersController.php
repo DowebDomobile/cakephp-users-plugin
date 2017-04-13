@@ -53,30 +53,40 @@ class UsersController extends AppController
          */
         $isActive = false;
 
+        /**
+         * @var bool $isGeneratePassword
+         * @todo move to config. False for allow user custom password. True for generate password.
+         */
+        $isGeneratePassword = true;
+
         $this->dispatchEvent('Controller.Users.beforeRegister', null, $this);
 
-        $user = $this->Users->newEntity(
-            [
-                'password' => $password = $isActive ? $this->PasswordGenerator->run() : null,
-                'is_active' => $isActive ? : null,
-                'contacts' => [
-                    [
-                        'type' => $contactType,
-                        'contact' => $isActive ? $this->request->getData('contact') : null,
-                        'replace' => $isActive ? null : $this->request->getData('contact'),
-                        'code' => $code = $isActive ? null : $this->CodeGenerator->run(),
-                        'is_login' => true,
-                    ]
-                ],
-            ]
-        );
+        $data = [
+            'contacts' => [
+                ['type' => $contactType, 'replace' => $isActive ? null : $this->request->getData('contact')]
+            ],
+        ];
+
+        if ($isGeneratePassword) {
+            $data['password'] = $isActive ? $this->PasswordGenerator->run() : null;
+        }
+
+        $data += $this->request->getData();
+        unset($data['contact']);
+
+        $user = $this->Users->newEntity($data);
+
+        $user->is_active = $isActive ? : null;
+        $user->contacts[0]->contact = $isActive ? $this->request->getData('contact') : null;
+        $user->contacts[0]->code = $code = $isActive ? null : $this->CodeGenerator->run();
+        $user->contacts[0]->is_login = true;
 
         $success = (bool)$this->Users->save($user);
 
         if ($success) {
             $this->dispatchEvent(
                 'Controller.Users.afterRegister',
-                ['user' => $user, 'password' => $password, 'code' => $code],
+                ['user' => $user, 'password' => $data['password'], 'code' => $code],
                 $this
             );
         }
