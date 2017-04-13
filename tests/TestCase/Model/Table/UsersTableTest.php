@@ -88,33 +88,7 @@ class UsersTableTest extends TestCase
         ];
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @dataProvider dataProviderTestValidationDefaultFail
-     *
-     * @param array $data
-     * @param array $expectedErrors
-     * @return void
-     */
-    public function testValidationDefaultFail($data, $expectedErrors)
-    {
-        $user = $this->Users->newEntity($data);
-
-        $errors = $user->errors();
-
-        $this->assertNotEmpty($errors);
-        $this->assertEquals($expectedErrors, $errors);
-    }
-
-    public function dataProviderTestValidationDefaultFail()
-    {
-        return [
-                [[], ['is_active' => ['_required' => 'This field is required']]],
-        ];
-    }
-
-    /**
+   /**
      * Test buildRules method
      *
      * @return void

@@ -59,12 +59,14 @@ class UsersControllerTest extends IntegrationTestCase
         /** @var UsersTable $Users */
         $Users = TableRegistry::get('Dwdm/Users.Users');
 
+        /** @var User $user */
         $user = $Users->find('all', ['contain' => ['Contacts']])->where(['id' => 1])->first();
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertCount(1, $user->contacts);
         $this->assertInstanceOf(Contact::class, $user->contacts[0]);
         $this->assertEquals($phone, $user->contacts[0]->replace);
+        $this->assertNull($user->is_active);
 
         $this->assertEventFired('Controller.Users.beforeRegister', $this->eventManager);
         $this->assertEventFired('Controller.Users.afterRegister', $this->eventManager);

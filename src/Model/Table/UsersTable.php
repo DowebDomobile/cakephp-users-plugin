@@ -76,8 +76,7 @@ class UsersTable extends Table
 
         $validator
             ->boolean('is_active')
-            ->requirePresence('is_active', 'create')
-            ->notEmpty('is_active');
+            ->allowEmpty('is_active');
 
         return $validator;
     }

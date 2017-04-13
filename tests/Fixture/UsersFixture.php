@@ -33,7 +33,7 @@ class UsersFixture extends TestFixture
         'username' => ['type' => 'string', 'length' => 255, 'default' => null, 'null' => true, 'comment' => null, 'precision' => null, 'fixed' => null],
         'password' => ['type' => 'string', 'length' => 60, 'default' => null, 'null' => true, 'comment' => null, 'precision' => null, 'fixed' => null],
         'code' => ['type' => 'string', 'length' => 60, 'default' => null, 'null' => true, 'comment' => null, 'precision' => null, 'fixed' => null],
-        'is_active' => ['type' => 'boolean', 'length' => null, 'default' => 1, 'null' => false, 'comment' => null, 'precision' => null],
+        'is_active' => ['type' => 'boolean', 'length' => null, 'default' => null, 'null' => true, 'comment' => null, 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
             'users_username' => ['type' => 'unique', 'columns' => ['username'], 'length' => []],
@@ -56,7 +56,7 @@ class UsersFixture extends TestFixture
                         'username' => 'username1',
                         'password' => null,
                         'code' => null,
-                        'is_active' => false
+                        'is_active' => null
                 ],
                 [
                         'id' => 1002,

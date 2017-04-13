@@ -58,7 +58,7 @@ class UsersController extends AppController
         $user = $this->Users->newEntity(
             [
                 'password' => $password = $isActive ? $this->PasswordGenerator->run() : null,
-                'is_active' => $isActive,
+                'is_active' => $isActive ? : null,
                 'contacts' => [
                     [
                         'type' => $contactType,
