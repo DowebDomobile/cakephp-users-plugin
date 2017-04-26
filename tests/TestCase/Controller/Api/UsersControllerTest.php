@@ -118,7 +118,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->post('/users/api/users/login.json', ['contact' => 'email@example.com', 'password' => 'password']);
 
         $this->assertResponseOk();
-
+        $this->assertSession(1000, 'Auth.User.id');
         $this->assertResponseEquals(
             json_encode(
                 [

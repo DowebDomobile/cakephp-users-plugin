@@ -156,6 +156,7 @@ trait UserActionsTrait
         $message = $success ? __('User logged in.') : __('Invalid contact or password.');
 
         if ($success) {
+            $this->Auth->setUser($user);
             $this->dispatchEvent('Controller.Users.afterLogin', ['user' => $user], $this);
         }
 
