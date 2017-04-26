@@ -112,22 +112,23 @@ trait UserActionsTrait
         $success = $this->Users->getConnection()->transactional(
             function (Connection $connection) use ($contactType) {
                 $conditions = [
-                    'type' => $contactType,
-                    'replace' => $this->request->getData('contact'),
-                    'code' => $this->request->getData('code')
+                    'Contacts.type' => $contactType,
+                    'Contacts.replace' => $this->request->getData('contact'),
+                    'Contacts.code' => $this->request->getData('code')
                 ];
                 /** @var Contact $contact */
-                $contact = $this->Users->Contacts->find()->where($conditions)->first();
+                $contact = $this->Users->Contacts->find()->contain('Users')->where($conditions)->first();
 
                 $fail = !$this->Users->Contacts->updateAll(
                     ['contact' => new IdentifierExpression('replace'), 'code' => null, 'replace' => null],
                     $conditions
                 );
 
-                $fail = $fail ?: !$this->Users->updateAll(
-                    ['password' => $this->PasswordGenerator->run(), 'is_active' => true],
-                    ['id' => $contact->user_id, 'password IS' => null]
-                );
+                if (!$fail && empty($contact->user->password)) {
+                    $contact->user->set('password', $this->PasswordGenerator->run());
+                    $contact->user->set('is_active', true);
+                    $fail = !(bool)$this->Users->save($contact->user);
+                }
 
                 return !$fail;
             }

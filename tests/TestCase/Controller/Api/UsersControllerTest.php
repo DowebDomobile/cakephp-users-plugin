@@ -108,6 +108,7 @@ class UsersControllerTest extends IntegrationTestCase
 
         $this->assertInstanceOf(User::class, $contact->user);
         $this->assertTrue($contact->user->is_active);
+        $this->assertNotEquals(8, strlen($contact->user->password));
 
         $this->assertEventFired('Controller.Users.beforeConfirm', $this->eventManager);
         $this->assertEventFired('Controller.Users.afterConfirm', $this->eventManager);
