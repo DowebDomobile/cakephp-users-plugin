@@ -5,6 +5,7 @@
 
 namespace Dwdm\Users\Test\TestCase\Controller\Api;
 
+use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;

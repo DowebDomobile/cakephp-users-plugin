@@ -241,13 +241,13 @@ trait UserActionsTrait
         $success = (bool) $contact;
 
         if ($success) {
-            $contact->user->password = $this->PasswordGenerator->run();
+            $contact->user->password = $password = $this->PasswordGenerator->run();
             $contact->user->code = null;
             $success = (bool) $this->Users->save($contact->user);
         }
 
         if ($success) {
-            $this->dispatchEvent('Controller.Users.afterUpdate', ['contact' => $contact], $this);
+            $this->dispatchEvent('Controller.Users.afterUpdate', compact('contact', 'password'), $this);
         }
 
         $message = $success ? __('New password was sent.') : __('Invalid contact or code.');
