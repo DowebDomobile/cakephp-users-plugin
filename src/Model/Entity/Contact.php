@@ -48,4 +48,23 @@ class Contact extends Entity
      * @var array
      */
     protected $_hidden = ['user_id', 'code'];
+
+    protected function _setContact($contact)
+    {
+        return $this->_filterContact($contact);
+    }
+
+    protected function _setReplace($contact)
+    {
+        return $this->_filterContact($contact);
+    }
+
+    private function _filterContact($contact)
+    {
+        if (isset($this->type) && 'phone' == $this->type) {
+            $contact = preg_replace('/[^0-9\+]+/', '', $contact);
+        }
+
+        return $contact;
+    }
 }
