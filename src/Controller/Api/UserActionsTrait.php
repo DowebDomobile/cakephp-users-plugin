@@ -252,7 +252,7 @@ trait UserActionsTrait
 
         $message = $success ? __('New password was sent.') : __('Invalid contact or code.');
 
-        $errors = $contact->user->getErrors();
+        $errors = isset($contact->user) ? $contact->user->getErrors() : [];
 
         $this->set(compact('success', 'message', 'errors'));
     }

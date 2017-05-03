@@ -205,6 +205,15 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertEventFired('Controller.Users.afterUpdate', $this->eventManager);
     }
 
+    public function testUpdateEmpty()
+    {
+        $this->post('/users/api/users/update.json');
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('"success": false,');
+        $this->assertResponseContains('"message": "Invalid contact or code.",');
+    }
+
     public function testLogout()
     {
         $this->session(['Auth' => ['User' => ['id' => 1000]]]);
