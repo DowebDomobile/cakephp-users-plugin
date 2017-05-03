@@ -170,6 +170,15 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertEventFired('Controller.Users.afterRestore', $this->eventManager);
     }
 
+    public function testRestoreEmpty()
+    {
+        $this->post('/users/api/users/restore.json');
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('"success": false,');
+        $this->assertResponseContains('"message": "Invalid contact.",');
+    }
+
     public function testUpdate()
     {
         $oldHash = $this->fixtureManager->loaded()['plugin.dwdm/users.users']->records[3]['password'];

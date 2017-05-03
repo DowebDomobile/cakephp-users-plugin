@@ -9,7 +9,7 @@ return [
     'App' => [
         'encoding' => 'UTF-8',
         'defaultLocale' => 'en_US',
-        'namespace' => 'dwdm\\Users',
+        'namespace' => 'Dwdm\\Users',
     ],
 
     'Datasources' => [
