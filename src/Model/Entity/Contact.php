@@ -61,7 +61,7 @@ class Contact extends Entity
 
     private function _filterContact($contact)
     {
-        if (isset($this->type) && 'phone' == $this->type) {
+        if (isset($contact) && isset($this->type) && 'phone' == $this->type) {
             $contact = preg_replace('/[^0-9\+]+/', '', $contact);
         }
 

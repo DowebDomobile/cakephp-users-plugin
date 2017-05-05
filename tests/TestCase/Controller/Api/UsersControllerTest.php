@@ -66,6 +66,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertCount(1, $user->contacts);
         $this->assertInstanceOf(Contact::class, $user->contacts[0]);
         $this->assertEquals($phone, $user->contacts[0]->replace);
+        $this->assertNull($user->contacts[0]->contact);
         $this->assertNull($user->is_active);
 
         $this->assertEventFired('Controller.Users.beforeRegister', $this->eventManager);
