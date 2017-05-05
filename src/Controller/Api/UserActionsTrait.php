@@ -118,7 +118,7 @@ trait UserActionsTrait
         /** @var Contact $contact */
         $contact = $this->Users->Contacts->find()->contain('Users')->where($conditions)->first();
 
-        $success = $this->Users->Contacts->updateAll(
+        $success = (bool)$this->Users->Contacts->updateAll(
             ['contact' => new IdentifierExpression('replace'), 'code' => null, 'replace' => null],
             $conditions
         );
