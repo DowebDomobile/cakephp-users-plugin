@@ -58,15 +58,4 @@ class User extends Entity
     {
         return empty($password) ? '' : (new DefaultPasswordHasher())->hash($password);
     }
-
-    /**
-     * Generate new code or unset code
-     *
-     * @param boolean $value
-     * @return null|string
-     */
-    public function _setCode($value)
-    {
-        return $value ? Text::uuid() : null;
-    }
 }
