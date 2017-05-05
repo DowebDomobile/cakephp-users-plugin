@@ -81,7 +81,7 @@ trait UserActionsTrait
         if ($success) {
             $this->dispatchEvent(
                 'Controller.Users.afterRegister',
-                ['user' => $user, 'password' => $data['password'], 'code' => $code],
+                ['user' => $user, 'contact' => $user->contacts[0], 'password' => $data['password'], 'code' => $code],
                 $this
             );
         }
