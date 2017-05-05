@@ -106,36 +106,35 @@ trait UserActionsTrait
          * @todo move to config. Can be string if need single contact type or array for limit contact types from request
          */
         $contactType = 'phone';
+        $password = null;
 
         $this->dispatchEvent('Controller.Users.beforeConfirm', null, $this);
 
-        $success = $this->Users->getConnection()->transactional(
-            function (Connection $connection) use ($contactType) {
-                $conditions = [
-                    'Contacts.type' => $contactType,
-                    'Contacts.replace' => $this->request->getData('contact'),
-                    'Contacts.code' => $this->request->getData('code')
-                ];
-                /** @var Contact $contact */
-                $contact = $this->Users->Contacts->find()->contain('Users')->where($conditions)->first();
+        $conditions = [
+            'Contacts.type' => $contactType,
+            'Contacts.replace' => $this->request->getData('contact'),
+            'Contacts.code' => $this->request->getData('code')
+        ];
+        /** @var Contact $contact */
+        $contact = $this->Users->Contacts->find()->contain('Users')->where($conditions)->first();
 
-                $fail = !$this->Users->Contacts->updateAll(
-                    ['contact' => new IdentifierExpression('replace'), 'code' => null, 'replace' => null],
-                    $conditions
-                );
-
-                if (!$fail && empty($contact->user->password)) {
-                    $contact->user->set('password', $this->PasswordGenerator->run());
-                    $contact->user->set('is_active', true);
-                    $fail = !(bool)$this->Users->save($contact->user);
-                }
-
-                return !$fail;
-            }
+        $success = $this->Users->Contacts->updateAll(
+            ['contact' => new IdentifierExpression('replace'), 'code' => null, 'replace' => null],
+            $conditions
         );
 
+        if ($success && empty($contact->user->password)) {
+            $contact->user->set('password', $password = $this->PasswordGenerator->run());
+            $contact->user->set('is_active', true);
+            $success = (bool)$this->Users->save($contact->user);
+        }
+
         if ($success) {
-            $this->dispatchEvent('Controller.Users.afterConfirm', null, $this);
+            $this->dispatchEvent(
+                'Controller.Users.afterConfirm',
+                ['contact' => $contact, 'user' => $contact->user, 'password' => $password],
+                $this
+            );
         }
 
         $message = $success ? __('Contact confirmed.') : __('Invalid contact.');
