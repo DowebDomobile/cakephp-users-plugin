@@ -40,7 +40,7 @@ class UsersControllerTest extends IntegrationTestCase
         parent::controllerSpy($event, $controller);
     }
 
-    public function testSuccessRegister()
+    public function testRegisterSuccess()
     {
         $this->post(
             '/users/api/users/register.json',
@@ -71,6 +71,27 @@ class UsersControllerTest extends IntegrationTestCase
 
         $this->assertEventFired('Controller.Users.beforeRegister', $this->eventManager);
         $this->assertEventFired('Controller.Users.afterRegister', $this->eventManager);
+    }
+
+    public function testRegisterShortPhone()
+    {
+        $this->post(
+            '/users/api/users/register.json',
+            ['contact' => $phone = '+7913123121']
+        );
+
+        $this->assertResponseOk();
+
+        $this->assertResponseEquals(
+            json_encode(
+                [
+                    'success' => false,
+                    'message' => 'Please fix registration info.',
+                    'errors' => ['contacts' => [['replace' => ['length' => 'The provided value is invalid']]]]
+                ],
+                JSON_PRETTY_PRINT
+            )
+        );
     }
 
     public function testRegisterGet()

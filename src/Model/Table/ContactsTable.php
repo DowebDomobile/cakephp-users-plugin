@@ -71,19 +71,21 @@ class ContactsTable extends Table
             ->notEmpty('type');
 
         $validator
-            ->allowEmpty('contact');
+            ->allowEmpty('contact')
+            ->add('contact', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']]);
 
         $validator
-                ->allowEmpty('replace')
-                ->add(
-                        'replace',
-                        'unique',
-                        [
-                                'rule' => function ($value, $context) use($repository) {
-                                            return !$repository->exists(['contact' => $value]);
-                                        }
-                        ]
-                );
+            ->allowEmpty('replace')
+            ->add(
+                'replace',
+                'unique',
+                [
+                    'rule' => function ($value, $context) use ($repository) {
+                        return !$repository->exists(['contact' => $value]);
+                    }
+                ]
+            )
+            ->add('replace', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']]);
 
         $validator
             ->allowEmpty('code');
@@ -108,5 +110,10 @@ class ContactsTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->isUnique(['type', 'contact']));
         return $rules;
+    }
+
+    public function isPhone($context)
+    {
+        return 'phone' == $context['data']['type'];
     }
 }
