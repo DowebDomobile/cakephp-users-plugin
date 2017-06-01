@@ -12,7 +12,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-/** @var \App\View\AppView $this */
+/** @var \Cake\View\View $this */
 ?>
 <ul class="right">
     <li><?= $this->Html->link(__d('users', 'Login'), ['_name' => 'login']); ?></li>

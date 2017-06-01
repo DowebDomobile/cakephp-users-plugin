@@ -12,7 +12,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-/** @var \App\View\AppView $this */
+/** @var \Cake\View\View $this */
 /** @var \Cake\Controller\Component\AuthComponent $Auth */
 ?>
 <ul class="right">

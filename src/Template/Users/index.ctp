@@ -12,8 +12,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-/** @var \App\View\AppView $this */
-/** @var \User\Model\Entity\User $user */
+/** @var \Cake\View\View $this */
+/** @var \Dwdm\Users\Model\Entity\User $user */
 /** @var \Cake\ORM\Query $users */
 ?>
 <nav class="large-2 medium-4 columns" id="actions-sidebar">

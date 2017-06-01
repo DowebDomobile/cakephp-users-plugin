@@ -12,13 +12,13 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-/** @var \App\View\AppView $this */
+/** @var \Cake\View\View $this */
 /** @var \Cake\Controller\Component\AuthComponent $Auth */
 /** @var array $menu */
 ?>
 <ul>
     <?php foreach ($menu as $label => $url): ?>
-        <li<?= $this->request->param('controller') == $url['controller'] ? ' class="active"' : ''; ?>>
+        <li<?= $this->request->getParam('controller') == $url['controller'] ? ' class="active"' : ''; ?>>
             <?= $this->Html->link($label, $url); ?>
         </li>
     <?php endforeach; ?>

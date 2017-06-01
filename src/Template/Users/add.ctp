@@ -12,8 +12,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-/** @var \App\View\AppView $this */
-/** @var \User\Model\Entity\User $user */
+/** @var \Cake\View\View $this */
+/** @var \Dwdm\Users\Model\Entity\User $user */
 ?>
 <nav class="large-2 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
@@ -26,9 +26,9 @@
     <fieldset>
         <legend><?= __d('users', 'Add User') ?></legend>
         <?php
-            echo $this->Form->input('email');
-            echo $this->Form->input('password');
-            echo $this->Form->input('is_active', ['default' => true]);
+            echo $this->Form->control('email');
+            echo $this->Form->control('password');
+            echo $this->Form->control('is_active', ['default' => true]);
         ?>
     </fieldset>
     <?= $this->Form->button(__d('users', 'Submit')) ?>

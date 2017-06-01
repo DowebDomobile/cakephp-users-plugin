@@ -87,7 +87,7 @@ trait UserActionsTrait
         }
 
         $errors = $user->getErrors();
-        $message = $success ? __('User successfully registered.') : __('Please fix registration info.');
+        $message = $success ? __d('user', 'User successfully registered.') : __d('user','Please fix registration info.');
 
         $this->set(compact('success', 'message', 'errors'));
     }
@@ -137,7 +137,7 @@ trait UserActionsTrait
             );
         }
 
-        $message = $success ? __('Contact confirmed.') : __('Invalid contact.');
+        $message = $success ? __d('user', 'Contact confirmed.') : __d('user', 'Invalid contact.');
 
         $this->set(compact('success', 'message'));
     }
@@ -153,7 +153,7 @@ trait UserActionsTrait
 
         $user = $this->Auth->identify();
         $success = (bool)$user;
-        $message = $success ? __('User logged in.') : __('Invalid contact or password.');
+        $message = $success ? __d('user', 'User logged in.') : __d('user', 'Invalid contact or password.');
 
         if ($success) {
             $this->Auth->setUser($user);
@@ -201,7 +201,7 @@ trait UserActionsTrait
             $this->dispatchEvent('Controller.Users.afterRestore', ['contact' => $contact], $this);
         }
 
-        $message = $success ? __('Confirmation code was sent.') : __('Invalid contact.');
+        $message = $success ? __d('user', 'Confirmation code was sent.') : __d('user', 'Invalid contact.');
 
         $errors = isset($contact->user) ? $contact->user->getErrors() : [];
 
@@ -249,7 +249,7 @@ trait UserActionsTrait
             $this->dispatchEvent('Controller.Users.afterUpdate', compact('contact', 'password'), $this);
         }
 
-        $message = $success ? __('New password was sent.') : __('Invalid contact or code.');
+        $message = $success ? __d('user', 'New password was sent.') : __d('user', 'Invalid contact or code.');
 
         $errors = isset($contact->user) ? $contact->user->getErrors() : [];
 
@@ -267,6 +267,6 @@ trait UserActionsTrait
 
         $this->dispatchEvent('Controller.Users.afterLogout', ['user' => $this->Auth->user()], $this);
 
-        $this->set('message', __('Logged out.'));
+        $this->set('message', __d('user', 'Logged out.'));
     }
 }

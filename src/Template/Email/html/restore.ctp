@@ -12,11 +12,11 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-/** @var \App\View\AppView $this */
+/** @var Cake\View\View $this */
 /** @var string $email */
 /** @var string $code */
 ?>
 <?= $this->Html->link(
-        __('Generate new password'),
+        __d('user', 'Generate new password'),
         ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'restore', $email, $code, '_full' => true]
 );
