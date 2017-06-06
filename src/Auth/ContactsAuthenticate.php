@@ -118,7 +118,7 @@ class ContactsAuthenticate extends FormAuthenticate
         /** @var AuthComponent $Auth */
         $Auth = $this->_registry->get('Auth');
         if (!$Auth->getConfig('unauthorizedRedirect')) {
-            $result = $response->withStatus(403, __d('user', 'Forbidden'))
+            $result = $response->withStatus(403, __d('users', 'Forbidden'))
                 ->withBody(
                     new CallbackStream(
                         function () use ($Auth) {

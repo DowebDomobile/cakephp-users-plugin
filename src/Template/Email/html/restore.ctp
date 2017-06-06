@@ -17,6 +17,6 @@
 /** @var string $code */
 ?>
 <?= $this->Html->link(
-        __d('user', 'Generate new password'),
+        __d('users', 'Generate new password'),
         ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'restore', $email, $code, '_full' => true]
 );
