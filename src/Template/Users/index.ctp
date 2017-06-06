@@ -43,7 +43,7 @@
                     <?= $this->Html->link(__d('users', 'View'), ['action' => 'view', $user->id]); ?>
                     <?= $this->Html->link(__d('users', 'Edit'), ['action' => 'edit', $user->id]); ?>
                     <?= $this->Form->postLink(
-                            __d('users', $user->is_active ? 'Deactivate' : 'Activate'),
+                            $user->is_active ? __d('users',  'Deactivate') : __d('users',  'Activate'),
                             ['action' => 'edit', $user->id],
                             ['data' => ['is_active' => (int)!$user->is_active]]
                     ); ?>
