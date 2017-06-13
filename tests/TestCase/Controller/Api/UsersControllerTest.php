@@ -27,6 +27,13 @@ class UsersControllerTest extends IntegrationTestCase
     /** @var EventManager */
     public $eventManager;
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->useHttpServer(false);
+    }
+
+
     public function controllerSpy($event, $controller = null)
     {
         /** @var Controller|null $controller */
