@@ -11,10 +11,13 @@
     "require": {
         "php": ">=5.4.16",
         "cakephp/plugin-installer": "*",
-        "cakephp/cakephp": "~3.0"
+        "cakephp/cakephp": "~3.0",
+        "cakephp/migrations": "~1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "*",
+        "cakephp/debug_kit": "~3.2",
+        "cakephp/bake": "~1.1"
     },
     "autoload": {
         "psr-4": {

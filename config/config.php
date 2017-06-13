@@ -85,6 +85,5 @@ return [
         ],
     ],
 
-
     'plugins' => ['Dwdm/Users' => dirname(__DIR__) . '/'],
 ];

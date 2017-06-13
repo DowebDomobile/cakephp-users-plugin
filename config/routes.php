@@ -13,32 +13,42 @@
  */
 use Cake\Routing\Router;
 use Cake\Routing\RouteBuilder;
+use Cake\Routing\Route\DashedRoute;
 
-Router::plugin(
-        'Dwdm/Users',
-        ['path' => '/users'],
-        function (RouteBuilder $routes) {
-            $routes->prefix(
-                'api',
-                function (RouteBuilder $routes) {
-                    $routes->extensions(['json']);
-                    $routes->resources(
-                        'Users',
-                        [
-                            'inflect' => 'dasherize',
-                            'map' => [
-                                'register' => ['method' => 'POST', 'action' => 'register'],
-                                'confirm' => ['method' => 'POST', 'action' => 'confirm'],
-                                'login' => ['method' => 'POST', 'action' => 'login'],
-                            ]
-                        ]
-                    );
-                    $routes->fallbacks('DashedRoute');
-                }
-            );
-            $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
-            $routes->connect('/login', ['controller' => 'Users', 'action' => 'login'], ['_name' => 'login']);
+//Router::plugin(
+//        'Dwdm/Users',
+//        ['path' => '/users'],
+//        function (RouteBuilder $routes) {
+//            $routes->prefix(
+//                'api',
+//                function (RouteBuilder $routes) {
+//                    $routes->extensions(['json']);
+//                    $routes->resources(
+//                        'Users',
+//                        [
+//                            'inflect' => 'dasherize',
+//                            'map' => [
+//                                'register' => ['method' => 'POST', 'action' => 'register'],
+//                                'confirm' => ['method' => 'POST', 'action' => 'confirm'],
+//                                'login' => ['method' => 'POST', 'action' => 'login'],
+//                            ]
+//                        ]
+//                    );
+//                    $routes->fallbacks('DashedRoute');
+//                }
+//            );
+//            $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
+//            $routes->connect('/login', ['controller' => 'Users', 'action' => 'login'], ['_name' => 'login']);
+//
+//            $routes->fallbacks('DashedRoute');
+//        }
+//);
+Router::defaultRouteClass(DashedRoute::class);
 
-            $routes->fallbacks('DashedRoute');
-        }
+Router::scope(
+    '/',
+    function (RouteBuilder $routes) {
+        $routes->connect('/', ['controller' => 'Users', 'action' => 'login']);
+        $routes->fallbacks(DashedRoute::class);
+    }
 );
