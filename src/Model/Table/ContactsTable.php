@@ -72,7 +72,8 @@ class ContactsTable extends Table
 
         $validator
             ->allowEmpty('contact')
-            ->add('contact', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']]);
+            ->add('contact', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']])
+            ->email('contact', false, null, [$this, 'isEmail']);
 
         $validator
             ->allowEmpty('replace')
@@ -85,7 +86,8 @@ class ContactsTable extends Table
                     }
                 ]
             )
-            ->add('replace', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']]);
+            ->add('replace', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']])
+            ->email('replace', false, null, [$this, 'isEmail']);
 
         $validator
             ->allowEmpty('code');
@@ -115,5 +117,10 @@ class ContactsTable extends Table
     public function isPhone($context)
     {
         return 'phone' == $context['data']['type'];
+    }
+
+    public function isEmail($context)
+    {
+        return 'email' == $context['data']['type'];
     }
 }
