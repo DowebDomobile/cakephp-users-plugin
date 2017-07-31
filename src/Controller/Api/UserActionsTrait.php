@@ -118,11 +118,13 @@ trait UserActionsTrait
         /** @var Contact $contact */
         $contact = $this->Users->Contacts->find()->contain('Users')->where($conditions)->first();
 
-        $contact->set('contact', $contact->get('replace'));
-        $contact->set('code', null);
-        $contact->set('replace', null);
-
-        $success = (bool) $this->Users->Contacts->save($contact);
+        $success = false;
+        if ($contact) {
+            $contact->set('contact', $contact->get('replace'));
+            $contact->set('code', null);
+            $contact->set('replace', null);
+            $success = (bool) $this->Users->Contacts->save($contact);
+        }
 
         if ($success && empty($contact->user->password)) {
             $contact->user->set('password', $password = $this->PasswordGenerator->run());
