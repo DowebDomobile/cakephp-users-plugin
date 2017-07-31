@@ -71,12 +71,23 @@ class ContactsTable extends Table
             ->notEmpty('type');
 
         $validator
-            ->allowEmpty('contact')
-            ->add('contact', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']])
+            ->notEmpty(
+                'contact',
+                null,
+                function ($context) {
+                    return empty($context['data']['replace']);
+                }
+            )->add('contact', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']])
             ->email('contact', false, null, [$this, 'isEmail']);
 
         $validator
-            ->allowEmpty('replace')
+            ->notEmpty(
+                'replace',
+                null,
+                function ($context) {
+                    return empty($context['data']['contact']);
+                }
+            )
             ->add(
                 'replace',
                 'unique',
