@@ -9,6 +9,7 @@ use Cake\Controller\Component\AuthComponent;
 use Cake\Database\Connection;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Http\ServerRequest;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\Query;
 use Dwdm\Users\Controller\Component\NumberGeneratorComponent;
 use Dwdm\Users\Model\Entity\Contact;
@@ -154,11 +155,15 @@ trait UserActionsTrait
 
         $this->dispatchEvent('Controller.Users.beforeLogin', null, $this);
 
-        $user = $this->Auth->identify();
-        $success = (bool)$user;
-        $message = $success ? __d('users', 'User logged in.') : __d('users', 'Invalid contact or password.');
+        $user = false;
+        try {
+            $user = $this->Auth->identify();
+        } catch (ForbiddenException $e) {
+            $message = $e->getMessage();
+        }
 
-        if ($success) {
+        if ($success = (bool)$user) {
+            $message = __d('users', 'User logged in.');
             $this->Auth->setUser($user);
             $this->dispatchEvent('Controller.Users.afterLogin', ['user' => $user], $this);
         }

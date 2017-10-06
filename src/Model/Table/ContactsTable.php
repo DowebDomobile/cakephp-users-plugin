@@ -94,7 +94,8 @@ class ContactsTable extends Table
                 [
                     'rule' => function ($value, $context) use ($repository) {
                         return !$repository->exists(['contact' => $value]);
-                    }
+                    },
+                    'message' => __d('users', 'Contact already registered'),
                 ]
             )
             ->add('replace', 'length', ['rule' => ['lengthBetween', 12, 12], 'on' => [$this, 'isPhone']])

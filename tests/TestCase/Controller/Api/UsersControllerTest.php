@@ -101,6 +101,27 @@ class UsersControllerTest extends IntegrationTestCase
         );
     }
 
+    public function testRegisterDuplicate()
+    {
+        $this->post(
+            '/users/api/users/register.json',
+            ['contact' => $phone = '+70000000002']
+        );
+
+        $this->assertResponseOk();
+
+        $this->assertResponseEquals(
+            json_encode(
+                [
+                    'success' => false,
+                    'message' => 'Please fix registration info.',
+                    'errors' => ['contacts' => [['replace' => ['unique' => 'Contact already registered']]]]
+                ],
+                JSON_PRETTY_PRINT
+            )
+        );
+    }
+
     public function testRegisterGet()
     {
         $this->get('/users/api/users/register.json');
@@ -174,6 +195,27 @@ class UsersControllerTest extends IntegrationTestCase
 
         $this->assertEventFired('Controller.Users.beforeLogin', $this->eventManager);
         $this->assertEventFired('Controller.Users.afterLogin', $this->eventManager);
+    }
+
+    public function testLoginInvalidContact()
+    {
+        $this->post('/users/api/users/login.json', ['contact' => 'invalid', 'password' => 'password']);
+
+        $this->assertResponseOk();
+        $this->assertSession(null, 'Auth.User.id');
+        $this->assertResponseEquals(
+            json_encode(
+                [
+                    'success' => false,
+                    'message' => 'Contact not registered in system.',
+                    'errors' => [],
+                    'user' => false,
+                ],
+                JSON_PRETTY_PRINT
+            )
+        );
+
+        $this->assertEventFired('Controller.Users.beforeLogin', $this->eventManager);
     }
 
     public function testRestore()

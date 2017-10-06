@@ -27,7 +27,7 @@ use Cake\Validation\Validator;
  * @method \Dwdm\Users\Model\Entity\User|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Dwdm\Users\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Dwdm\Users\Model\Entity\User[] patchEntities($entities, array $data, array $options = [])
- * @method \Dwdm\Users\Model\Entity\User findOrCreate($search, callable $callback = null)
+ * @method \Dwdm\Users\Model\Entity\User findOrCreate($search, callable $callback = null, $options = [])
  */
 class UsersTable extends Table
 {

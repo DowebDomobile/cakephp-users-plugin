@@ -18,6 +18,7 @@ use Cake\Controller\Component\AuthComponent;
 use Cake\Http\CallbackStream;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
@@ -129,5 +130,30 @@ class ContactsAuthenticate extends FormAuthenticate
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritDocs}
+     */
+    protected function _findUser($username, $password = null)
+    {
+        $result = $this->_query($username)->first();
+
+        if (empty($result)) {
+           throw new ForbiddenException(__d('users', 'Contact not registered in system.'));
+        }
+
+        if ($password !== null) {
+            $hasher = $this->passwordHasher();
+            $hashedPassword = $result->get($this->_config['fields']['password']);
+            if (!$hasher->check($password, $hashedPassword)) {
+                throw new ForbiddenException(__d('users', 'Invalid contact or password.'));
+            }
+
+            $this->_needsPasswordRehash = $hasher->needsRehash($hashedPassword);
+            $result->unsetProperty($this->_config['fields']['password']);
+        }
+
+        return $result->toArray();
     }
 }
