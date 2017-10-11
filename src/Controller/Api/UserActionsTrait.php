@@ -141,7 +141,7 @@ trait UserActionsTrait
             );
         }
 
-        $message = $success ? __d('users', 'Contact confirmed.') : __d('users', 'Invalid contact.');
+        $message = $success ? __d('users', 'Contact confirmed.') : __d('users', 'Invalid confirmation code.');
 
         $this->set(compact('success', 'message'));
     }
@@ -155,6 +155,7 @@ trait UserActionsTrait
 
         $this->dispatchEvent('Controller.Users.beforeLogin', null, $this);
 
+        $message = __d('users', 'Invalid contact or password.');
         $user = false;
         try {
             $user = $this->Auth->identify();
